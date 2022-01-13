@@ -1,13 +1,9 @@
-from iexfinance.stocks import Stock
-import requests
-import urllib.parse
 import requests
 import pandas as pd
-import datetime
-import time
 import os
 from dotenv import load_dotenv
 from pathlib import Path
+
 dotenv_path = Path('../.env')
 load_dotenv(dotenv_path=dotenv_path)
 
