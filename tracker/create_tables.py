@@ -1,16 +1,95 @@
 import psycopg2
-from tracker.postgres import connect
+from tracker.postgres import connect, config
 
 
 def create_tables():
     """ create tables in the PostgreSQL database"""
-    commands = (
+    command = (
         """
         CREATE TABLE financials (
-            ticker VARCHAR(5) PRIMARY KEY,
             ebitda BIGINT,
             accountspayable BIGINT,
-            capitalsurplus BIGINT
+            capitalsurplus VARCHAR(n),
+            cashchange BIGINT,
+            cashflow BIGINT,
+            cashflowfinancing BIGINT,
+            changesininventories BIGINT,
+            changesinreceivables BIGINT,
+            commonstock BIGINT,
+            costofrevenue BIGINT,
+            currency VARCHAR(n),
+            currentassets BIGINT,
+            currentcash BIGINT,
+            currentdebt BIGINT,
+            currentlongtermdebt BIGINT,
+            depreciation BIGINT,
+            dividendspaid VARCHAR(n),
+            ebit BIGINT,
+            exchangerateeffect VARCHAR(n),
+            filingtype VARCHAR(n),
+            fiscaldate VARCHAR(n),
+            fiscalquarter BIGINT,
+            fiscalyear BIGINT,
+            goodwill BIGINT,
+            grossprofit BIGINT,
+            incometax BIGINT,
+            intangibleassets BIGINT,
+            interestincome BIGINT,
+            inventory BIGINT,
+            investingactivityother VARCHAR(n),
+            investments VARCHAR(n),
+            longtermdebt BIGINT,
+            longterminvestments BIGINT,
+            minorityinterest BIGINT,
+            netborrowings BIGINT,
+            netincome BIGINT,
+            netincomebasic BIGINT,
+            nettangibleassets BIGINT,
+            operatingexpense BIGINT,
+            operatingincome BIGINT,
+            operatingrevenue BIGINT,
+            otherassets BIGINT,
+            othercurrentassets BIGINT,
+            othercurrentliabilities BIGINT,
+            otherincomeexpensenet BIGINT,
+            otherliabilities BIGINT,
+            pretaxincome BIGINT,
+            propertyplantequipment BIGINT,
+            receivables BIGINT,
+            reportdate VARCHAR(n),
+            researchanddevelopment BIGINT,
+            retainedearnings BIGINT,
+            revenue BIGINT,
+            sellinggeneralandadmin BIGINT,
+            shareholderequity BIGINT,
+            shorttermdebt BIGINT,
+            shortterminvestments BIGINT,
+            symbol VARCHAR(n),
+            totalassets BIGINT,
+            totalcash BIGINT,
+            totaldebt BIGINT,
+            totalinvestingcashflows BIGINT,
+            totalliabilities BIGINT,
+            totalrevenue BIGINT,
+            treasurystock BIGINT,
+            id VARCHAR(n),
+            key VARCHAR(n),
+            subkey VARCHAR(n),
+            date BIGINT,
+            updated BIGINT,
+            ticker VARCHAR(n),
+            fcf BIGINT,
+            operating_margin REAL,
+            net_margin REAL,
+            asset_turnover REAL,
+            roa REAL,
+            equity_multipl REAL,
+            roe REAL,
+            fcf_margin REAL,
+            cash_debt REAL,
+            equity_asset REAL,
+            debt_equity REAL,
+            debt_ebitda REAL
         )
         """)
     conn = None
@@ -21,8 +100,8 @@ def create_tables():
         conn = psycopg2.connect(**params)
         cur = conn.cursor()
         # create table one by one
-        for command in commands:
-            cur.execute(command)
+        #for command in commands:
+        cur.execute(command)
         # close communication with the PostgreSQL database server
         cur.close()
         # commit the changes
