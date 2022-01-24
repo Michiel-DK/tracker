@@ -82,6 +82,6 @@ def copy_from_stringio(df, table):
     cursor.close()
             
 if __name__ == '__main__':
-    adbe = Data('ADBE', 'quarter', '12').add_fundamentals()
+    adbe = Data('MSFT', 'quarter', '12').add_fundamentals()
     print(adbe.shape)
     copy_from_stringio(adbe, 'financials')
