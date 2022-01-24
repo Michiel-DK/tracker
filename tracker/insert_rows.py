@@ -1,5 +1,7 @@
 import psycopg2
 from tracker.postgres import connect, config
+from tracker.data import Data
+from io import StringIO
 
 def insert_one(row):
     """ insert a new vendor into the vendors table """
@@ -53,15 +55,33 @@ def insert_multiple(rows):
         if conn is not None:
             conn.close()
             
+def copy_from_stringio(df, table):
+    """
+    Here we are going save the dataframe in memory 
+    and use copy_from() to copy it to the table
+    """
+    # save dataframe to an in memory buffer
+    buffer = StringIO()
+    df.to_csv(buffer, index_label='id', header=False)
+    buffer.seek(0)
+    # read database configuration
+    params = config()
+    # connect to the PostgreSQL database
+    conn = psycopg2.connect(**params)
+    # create a new cursor    
+    cursor = conn.cursor()
+    try:
+        cursor.copy_from(buffer, table, sep=",")
+        conn.commit()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print("Error: %s" % error)
+        conn.rollback()
+        cursor.close()
+        return 1
+    print("copy_from_stringio() done")
+    cursor.close()
+            
 if __name__ == '__main__':
-    # insert one vendor
-    insert_one("3M Co.")
-    # insert multiple vendors
-    insert_multiple([
-        ('AKM Semiconductor Inc.',),
-        ('Asahi Glass Co Ltd.',),
-        ('Daikin Industries Ltd.',),
-        ('Dynacast International Inc.',),
-        ('Foster Electric Co. Ltd.',),
-        ('Murata Manufacturing Co. Ltd.',)
-    ])
+    adbe = Data('ADBE', 'quarter', '12').add_fundamentals()
+    print(adbe.shape)
+    copy_from_stringio(adbe, 'financials')

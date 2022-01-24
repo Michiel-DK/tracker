@@ -7,6 +7,7 @@ def create_tables():
     command = (
         """
         CREATE TABLE financials (
+            index INT,
             ebitda BIGINT,
             accountspayable BIGINT,
             capitalsurplus BIGINT,

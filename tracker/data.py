@@ -9,8 +9,8 @@ load_dotenv(dotenv_path=dotenv_path)
 
 
 BASE_URL = 'https://sandbox.iexapis.com'
-SANDBOX_TOKEN = os.getenv('SANDBOX_TOKEN')
-
+#SANDBOX_TOKEN = os.getenv('SANDBOX_TOKEN')
+SANDBOX_TOKEN='Tpk_5293f50ffb0948b2b6fa6a5ca8428eae'
 
 class Data:
     """Class to retrieve data from multiple sources"""
@@ -33,6 +33,7 @@ class Data:
         financials['fiscaldate'] = pd.to_datetime(financials['fiscaldate']).dt.strftime('%Y%m')
         #v.set_index(v['fiscaldate'], inplace=True)
         financials['ticker'] = self.ticker
+        financials = financials.fillna(0)
         return financials
     
     def add_fundamentals(self):
@@ -56,4 +57,6 @@ class Data:
         
         return financials
         
-        
+if __name__ == '__main__':
+    adbe = Data('ADBE', 'quarter', '12').add_fundamentals()
+    print(adbe)
