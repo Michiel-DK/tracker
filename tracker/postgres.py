@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import psycopg2
 #from config import config
+from configparser import ConfigParser
 from dotenv import load_dotenv
 from pathlib import Path
 import os
@@ -9,18 +10,30 @@ import os
 dotenv_path = Path('../.env')
 load_dotenv(dotenv_path=dotenv_path)
 
+def config(filename='database.ini', section='postgresql'):
+    # create a parser
+    parser = ConfigParser()
+    # read config file
+    parser.read(filename)
+
+    # get section, default to postgresql
+    db = {}
+    if parser.has_section(section):
+        params = parser.items(section)
+        for param in params:
+            db[param[0]] = param[1]
+    else:
+        raise Exception('Section {0} not found in the {1} file'.format(section, filename))
+
+    return db
+
+
 def connect():
     """ Connect to the PostgreSQL database server """
     conn = None
     try:
         # read connection parameters
-        params = {
-            'host':os.getenv('postgres_host'),
-            'database':os.getenv('postgres_database'),
-            'user':os.getenv('postgres_user'),
-            'password':os.getenv('postgres_password')
-        }
-
+        params = config()
         # connect to the PostgreSQL server
         print('Connecting to the PostgreSQL database...')
         conn = psycopg2.connect(**params)

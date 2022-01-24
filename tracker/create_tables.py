@@ -1,6 +1,5 @@
 import psycopg2
-from config import config
-from tracker.postgres import config
+from tracker.postgres import connect
 
 
 def create_tables():
@@ -8,8 +7,10 @@ def create_tables():
     commands = (
         """
         CREATE TABLE financials (
-            vendor_id SERIAL PRIMARY KEY,
-            vendor_name VARCHAR(255) NOT NULL
+            ticker VARCHAR(5) PRIMARY KEY,
+            ebitda BIGINT,
+            accountspayable BIGINT,
+            capitalsurplus BIGINT
         )
         """)
     conn = None
