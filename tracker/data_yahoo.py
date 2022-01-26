@@ -28,15 +28,23 @@ class Yahoo:
         
         return combo
     
-    def add_fundamentals(self):
+    def preprocess(self):
+        """preprocess data"""
         financials = self.get_financials()
+        ticker = self.ticker
+        financials = financials.reset_index().rename(columns={'index':'year'})
+        financials['ticker'] = ticker
+        
+        return financials
+    
+    def add_fundamentals(self):
+        """add fundamental ratio"""
+        financials = self.preprocess()
         
         try:
             financials['fcf'] = financials['total_cash_from_operating_activities'] - abs(financials['capital_expenditures'])
         except KeyError:
             financials['fcf'] = financials['total_cash_from_operating_activities']
-        financials['fcf'] = financials['fcf']
-        financials['revenue'] = financials['revenue']
         financials['cashflow_operations'] = financials['total_cash_from_operating_activities']
         financials.sort_index(inplace=True)
         financials['fcf_change'] = financials.fcf.pct_change()
