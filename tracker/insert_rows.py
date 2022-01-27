@@ -1,6 +1,6 @@
 import psycopg2
 from tracker.postgres import connect, config
-from tracker.data_iex import Data
+from tracker.data_iex import Iex
 from io import StringIO
 
 def copy_from_stringio(df, table):
@@ -83,6 +83,6 @@ def copy_from_stringio(df, table):
             
             
 if __name__ == '__main__':
-    adbe = Data('MSFT', 'quarter', '12').add_fundamentals()
+    adbe = Iex('MSFT', 'quarter', '12').add_fundamentals()
     print(adbe.shape)
     copy_from_stringio(adbe, 'financials')

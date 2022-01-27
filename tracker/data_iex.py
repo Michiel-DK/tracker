@@ -3,15 +3,14 @@ import pandas as pd
 import os
 from dotenv import load_dotenv
 from pathlib import Path
+from tracker.utils import reduce_memory_usage
 
-dotenv_path = Path('../.env')
-load_dotenv(dotenv_path=dotenv_path)
-
+load_dotenv()
 
 BASE_URL = 'https://sandbox.iexapis.com'
 SANDBOX_TOKEN = os.getenv('SANDBOX_TOKEN')
 
-class Data:
+class Iex:
     """Class to retrieve data from multiple sources"""
     def __init__(self, ticker, timing, length):
         self.ticker = ticker
@@ -22,7 +21,7 @@ class Data:
         """get financials from iex api"""
         financials_url = f"{BASE_URL}/stable/stock/{self.ticker}/financials?period={self.timing}&last={self.length}&token={SANDBOX_TOKEN}"
         financials_json = requests.get(financials_url).json()
-        return pd.DataFrame(financials_json['financials'])
+        return reduce_memory_usage(pd.DataFrame(financials_json['financials']), verbose=True)
     
     def preprocess(self):
         """preprocess date and column names"""
@@ -33,29 +32,31 @@ class Data:
         #v.set_index(v['fiscaldate'], inplace=True)
         financials['ticker'] = self.ticker
         financials = financials.fillna(0)
-        return financials
+        return reduce_memory_usage(financials)
     
     def add_fundamentals(self):
         financials = self.preprocess()
         
         """add profitability data"""
         financials['fcf'] = financials['cashflow'] + financials['researchanddevelopment']
-        financials['operating_margin'] = financials['operatingincome'] / financials['revenue']
-        financials['net_margin'] = financials['netincome'] / financials['revenue']
-        financials['asset_turnover'] = financials['revenue'] / financials['totalassets']
+        financials['operatingmargin'] = financials['operatingincome'] / financials['revenue']
+        financials['netmargin'] = financials['netincome'] / financials['revenue']
+        financials['assetturnover'] = financials['revenue'] / financials['totalassets']
         financials['roa'] = financials['netincome']*4/ financials['totalassets']
-        financials['equity_multipl'] = financials['totalassets'] / financials['shareholderequity']
         financials['roe'] = financials['netincome'] / financials['shareholderequity']
-        financials['fcf_margin'] = financials['fcf'] / financials['revenue']
+        financials['fcfmargin'] = financials['fcf'] / financials['revenue']
         
         """add financial security data"""
-        financials['cash_debt'] = financials['totalcash'] / financials['totaldebt']
-        financials['equity_asset'] = financials['shareholderequity'] / financials['totalassets']
-        financials['debt_equity'] = financials['totaldebt'] / financials['shareholderequity']
-        financials['debt_ebitda'] = financials['totaldebt'] / (financials['ebitda']*4)
-        
-        return financials
+        financials['cashdebt'] = financials['totalcash'] / financials['totaldebt']
+        financials['equityasset'] = financials['shareholderequity'] / financials['totalassets']
+        financials['debtequity'] = financials['totaldebt'] / financials['shareholderequity']
+        financials['financialleverage'] = financials['totalassets'] / financials['shareholderequity']
+        financials['currentratio'] = financials['currentassets'] / financials['inventory']
+        financials['goodwillassets'] = financials['goodwill'] / financials['currentassets']
+        financials['receivablessales'] = financials['netreceivables'] / financials['revenue']
+                
+        return reduce_memory_usage(financials)
         
 if __name__ == '__main__':
-    adbe = Data('TGNOF', 'quarter', '12').add_fundamentals()
+    adbe = Iex('MSFT', 'quarter', '12').add_fundamentals()
     print(adbe)
