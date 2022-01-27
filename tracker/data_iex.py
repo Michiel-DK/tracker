@@ -41,10 +41,10 @@ class Iex:
         financials['fcf'] = financials['cashflow'] + financials['researchanddevelopment']
         financials['operatingmargin'] = financials['operatingincome'] / financials['revenue']
         financials['netmargin'] = financials['netincome'] / financials['revenue']
+        financials['fcfmargin'] = financials['fcf'] / financials['revenue']
         financials['assetturnover'] = financials['revenue'] / financials['totalassets']
         financials['roa'] = financials['netincome']*4/ financials['totalassets']
         financials['roe'] = financials['netincome'] / financials['shareholderequity']
-        financials['fcfmargin'] = financials['fcf'] / financials['revenue']
         
         """add financial security data"""
         financials['cashdebt'] = financials['totalcash'] / financials['totaldebt']
@@ -56,6 +56,17 @@ class Iex:
         financials['receivablessales'] = financials['netreceivables'] / financials['revenue']
                 
         return reduce_memory_usage(financials)
+    
+    def checklist(self):
+        financials = self.add_fundamentals()
+        
+        """add moat checklist"""
+        moat = pd.DataFrame()
+        moat['net_margin'] = financials['net_margin'].apply(lambda x: 1 if x >= 0.15 else 0)
+        moat['roa'] = financials['net_margin'].apply(lambda x: 1 if x >= 0.06 else 0)
+        moat['roe'] = financials['net_margin'].apply(lambda x: 1 if x >= 0.1 else 0)
+        moat['fcf_earnings'] = financials['fcf_earnings'].apply(lambda x: 1 if x >= 0.05 else 0)
+        moat['operating_margin'] = financials['operating_margin'].apply(lambda x: 1 if x >= 0.15 else 0)
         
 if __name__ == '__main__':
     adbe = Iex('MSFT', 'quarter', '12').add_fundamentals()
