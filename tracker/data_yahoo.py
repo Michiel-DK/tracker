@@ -33,6 +33,8 @@ class Yahoo:
         financials = self.get_financials()
         ticker = self.ticker
         financials = financials.reset_index().rename(columns={'index':'year'})
+        financials.fillna(0, inplace=True)
+        financials = financials.astype('int')
         financials['ticker'] = ticker
         
         return financials
@@ -50,7 +52,6 @@ class Yahoo:
         financials['fcf_change'] = financials.fcf.pct_change()
         financials['revenue_change'] = financials.revenue.pct_change()
         financials['cashflow_change'] = financials.cashflow_operations.pct_change()
-        
         financials['net_margin'] = financials['net_income']/financials['revenue']
         financials['asset_turnover'] = financials['revenue']/financials['total_assets']
         financials['net_income/cfo'] = financials['net_income']/financials['total_cash_from_operating_activities']
