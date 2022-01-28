@@ -1,8 +1,10 @@
 import pandas as pd
+import numpy as np
 import yfinance as yf
 from tracker.utils import reduce_memory_usage
 
 class Yahoo:
+    ### build in check if exits https://stackoverflow.com/questions/3867718/how-do-i-abort-object-instance-creation-in-python or https://stackoverflow.com/questions/43802348/python-exit-from-class-after-handling-exception
     """Class to retrieve data Yahoo finance app"""
     def __init__(self, ticker):
         self.ticker = ticker
@@ -26,6 +28,8 @@ class Yahoo:
         frames = [cashflow, balance, income]
         combo = pd.concat(frames).T
         combo.columns = [x.replace(' ','').lower() for x in list(combo.columns)]
+        
+        combo = combo.fillna(0).astype('int')
         
         return reduce_memory_usage(combo)
     
@@ -59,18 +63,42 @@ class Yahoo:
         financials['assetturnover'] = financials['revenue']/financials['totalassets']
         financials['roa'] = financials['netmargin'] / financials['assetturnover'] 
         financials['roe'] = financials['netmargin'] * financials['assetturnover'] * (financials['totalassets'] / financials['totalstockholderequity'])
-        financials['equitymultipl'] = financials['totalassets'] / (financials['longtermdebt'] + financials['shortlongtermdebt'])
+        try:
+            financials['equitymultipl'] = financials['totalassets'] / (financials['longtermdebt'] + financials['shortlongtermdebt'])
+        except KeyError:
+            try:
+                financials['equitymultipl'] = financials['totalassets'] / (financials['longtermdebt'])
+            except KeyError:
+                try:
+                    financials['equitymultipl'] = financials['totalassets'] / (financials['shortlongtermdebt'])
+                except KeyError:
+                    financials['equitymultipl'] = np.nan
+            
+            
 
         """add financial security data"""
-        financials['cashdebt'] = financials['cash'] / (financials['longtermdebt'] + financials['shortlongtermdebt'])
+        try:
+            financials['cashdebt'] = financials['cash'] / (financials['longtermdebt'] + financials['shortlongtermdebt'])
+        except KeyError:
+            try:
+                financials['cashdebt'] = financials['cash'] / (financials['longtermdebt'])
+            except KeyError:
+                try:
+                    financials['cashdebt'] = financials['cash'] / (financials['shortlongtermdebt'])
+                except KeyError:
+                    financials['cashdebt'] = np.nan
+                
         financials['equityasset'] = financials['totalstockholderequity'] / financials['totalassets']
-        financials['debtequity'] = financials['longtermdebt'] / financials['totalstockholderequity']
+        try:
+            financials['debtequity'] = financials['longtermdebt'] / financials['totalstockholderequity']
+        except KeyError:
+            financials['debtequity'] = np.nan
         financials['financialleverage'] =  financials['totalassets'] / financials['totalstockholderequity']
         financials['currentratio'] = financials['totalcurrentassets'] / financials['totalcurrentliabilities']
         try:
             financials['goodwillassets'] = financials['goodwill'] / financials['totalcurrentassets']
         except KeyError:
-            pass
+            financials['goodwillassets'] = 0
         financials['receivablessales'] = financials['netreceivables'] / financials['revenue']
         
         return reduce_memory_usage(financials)
@@ -99,7 +127,7 @@ class Yahoo:
         health['year'] = financials['year']
         health['ticker'] = financials['ticker']
         
-        return moat, health
+        return reduce_memory_usage(moat), reduce_memory_usage(health)
 
 if __name__ == '__main__':
     tri = Yahoo('TRI.PA').add_fundamentals()

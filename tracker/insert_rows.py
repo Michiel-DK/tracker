@@ -1,7 +1,8 @@
 import psycopg2
 from tracker.postgres import connect, config
-from tracker.data_iex import Iex
+from tracker.data_yahoo import Yahoo
 from io import StringIO
+import time
 
 def copy_from_stringio(df, table):
     """
@@ -83,6 +84,15 @@ def copy_from_stringio(df, table):
             
             
 if __name__ == '__main__':
-    adbe = Iex('MSFT', 'quarter', '12').add_fundamentals()
-    print(adbe.shape)
-    copy_from_stringio(adbe, 'financials')
+    tickers = ['ABBV','ADBE', 'AMGN', 'AY', 'BABA', 'CARM.PA', 'CRM', 'CRSP', 'CVS', 'DUKE.L', 'EURN', 'GAIN', 'GOOGL', 'HASI', 'HSI', 'HHFA.DE', 'NXR.L', 'MO', "MSFT", 'PLTR', 'PYPL', 'RDS-A', 'SQ', 'TCPC', 'TDOC', "TSLX", 'TCPC', 'TTE', 'TRI.PA','V' , "WEHB.BR"]
+    start = time.time()
+    print(start)
+    for ticker in tickers:
+        full = Yahoo(ticker)
+        fundamentals = full.add_fundamentals()
+        copy_from_stringio(fundamentals, 'yearly_financials')
+        moat, health = full.checklist()
+        copy_from_stringio(moat, 'yearly_moat')
+        copy_from_stringio(health, 'yearly_health')
+    end = time.time()-start
+    print(end)
