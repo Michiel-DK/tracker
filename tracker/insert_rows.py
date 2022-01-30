@@ -89,7 +89,7 @@ if __name__ == '__main__':
     print(start)
     for ticker in tickers:
         full = Yahoo(ticker)
-        fundamentals = full.add_fundamentals()
+        fundamentals = full.get_fundamentals()
         copy_from_stringio(fundamentals, 'yearly_financials')
         moat, health = full.checklist()
         copy_from_stringio(moat, 'yearly_moat')
