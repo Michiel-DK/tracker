@@ -52,7 +52,7 @@ def print_type(df):
         if df.loc[i]=='int64' or df.loc[i]=='int32' or df.loc[i]=='int16' or df.loc[i]=='int8':
             print(f"{i} BIGINT,")
         elif df.loc[i]=='object':
-            print(f"{i} VARCHAR(n),")
+            print(f"{i} TEXT,")
         else:
             print(f"{i} REAL,")
     

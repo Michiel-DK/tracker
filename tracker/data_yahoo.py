@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import yfinance as yf
+from datetime import date
 from tracker.utils import reduce_memory_usage
 
 class Yahoo:
@@ -13,10 +14,192 @@ class Yahoo:
     """Class to retrieve data Yahoo finance app"""
     def __init__(self, ticker):
         self.ticker = ticker
+        
+    def get_ticker(self):
+        """get ticker class from yahoo"""
+        tick = yf.Ticker(self.ticker)
+        
+        return tick
+    
+    def get_info(self):
+        """get info dictionary from yahoo"""
+        
+        info_dict = self.get_ticker().info
+        
+        info_df = pd.DataFrame([info_dict], index=[date.today().strftime("%d/%m/%Y")])
+        info_df.columns = [x.replace(' ','').lower() for x in list(info_df.columns)]
+        info_df['companyofficers'] = info_df['companyofficers'].apply(lambda x:' '.join(x))
+        
+        columns = ['52WeekChange',
+                    'SandP52WeekChange',
+                    'address1',
+                    'address2',
+                    'algorithm',
+                    'annualHoldingsTurnover',
+                    'annualReportExpenseRatio',
+                    'ask',
+                    'askSize',
+                    'averageDailyVolume10Day',
+                    'averageVolume',
+                    'averageVolume10days',
+                    'beta',
+                    'beta3Year',
+                    'bid',
+                    'bidSize',
+                    'bookValue',
+                    'category',
+                    'circulatingSupply',
+                    'city',
+                    'companyOfficers',
+                    'country',
+                    'currency',
+                    'currentPrice',
+                    'currentRatio',
+                    'dateShortInterest',
+                    'dayHigh',
+                    'dayLow',
+                    'debtToEquity',
+                    'dividendRate',
+                    'dividendYield',
+                    'earningsGrowth',
+                    'earningsQuarterlyGrowth',
+                    'ebitda',
+                    'ebitdaMargins',
+                    'enterpriseToEbitda',
+                    'enterpriseToRevenue',
+                    'enterpriseValue',
+                    'exDividendDate',
+                    'exchange',
+                    'exchangeTimezoneName',
+                    'exchangeTimezoneShortName',
+                    'expireDate',
+                    'fax',
+                    'fiftyDayAverage',
+                    'fiftyTwoWeekHigh',
+                    'fiftyTwoWeekLow',
+                    'financialCurrency',
+                    'fiveYearAverageReturn',
+                    'fiveYearAvgDividendYield',
+                    'floatShares',
+                    'forwardEps',
+                    'forwardPE',
+                    'freeCashflow',
+                    'fromCurrency',
+                    'fullTimeEmployees',
+                    'fundFamily',
+                    'fundInceptionDate',
+                    'gmtOffSetMilliseconds',
+                    'grossMargins',
+                    'grossProfits',
+                    'heldPercentInsiders',
+                    'heldPercentInstitutions',
+                    'impliedSharesOutstanding',
+                    'industry',
+                    'isEsgPopulated',
+                    'lastCapGain',
+                    'lastDividendDate',
+                    'lastDividendValue',
+                    'lastFiscalYearEnd',
+                    'lastMarket',
+                    'lastSplitDate',
+                    'lastSplitFactor',
+                    'legalType',
+                    'logo_url',
+                    'longBusinessSummary',
+                    'longName',
+                    'market',
+                    'marketCap',
+                    'maxAge',
+                    'maxSupply',
+                    'messageBoardId',
+                    'morningStarOverallRating',
+                    'morningStarRiskRating',
+                    'mostRecentQuarter',
+                    'navPrice',
+                    'netIncomeToCommon',
+                    'nextFiscalYearEnd',
+                    'numberOfAnalystOpinions',
+                    'open',
+                    'openInterest',
+                    'operatingCashflow',
+                    'operatingMargins',
+                    'payoutRatio',
+                    'pegRatio',
+                    'phone',
+                    'preMarketPrice',
+                    'previousClose',
+                    'priceHint',
+                    'priceToBook',
+                    'priceToSalesTrailing12Months',
+                    'profitMargins',
+                    'quickRatio',
+                    'quoteType',
+                    'recommendationKey',
+                    'recommendationMean',
+                    'regularMarketDayHigh',
+                    'regularMarketDayLow',
+                    'regularMarketOpen',
+                    'regularMarketPreviousClose',
+                    'regularMarketPrice',
+                    'regularMarketVolume',
+                    'returnOnAssets',
+                    'returnOnEquity',
+                    'revenueGrowth',
+                    'revenuePerShare',
+                    'revenueQuarterlyGrowth',
+                    'sector',
+                    'sharesOutstanding',
+                    'sharesPercentSharesOut',
+                    'sharesShort',
+                    'sharesShortPreviousMonthDate',
+                    'sharesShortPriorMonth',
+                    'shortName',
+                    'shortPercentOfFloat',
+                    'shortRatio',
+                    'startDate',
+                    'state',
+                    'strikePrice',
+                    'symbol',
+                    'targetHighPrice',
+                    'targetLowPrice',
+                    'targetMeanPrice',
+                    'targetMedianPrice',
+                    'threeYearAverageReturn',
+                    'toCurrency',
+                    'totalAssets',
+                    'totalCash',
+                    'totalCashPerShare',
+                    'totalDebt',
+                    'totalRevenue',
+                    'tradeable',
+                    'trailingAnnualDividendRate',
+                    'trailingAnnualDividendYield',
+                    'trailingEps',
+                    'trailingPE',
+                    'trailingPegRatio',
+                    'twoHundredDayAverage',
+                    'volume',
+                    'volume24Hr',
+                    'volumeAllCurrencies',
+                    'website',
+                    'yield',
+                    'ytdReturn',
+                    'zip']
+        
+        empty = pd.DataFrame(columns=columns, index=[date.today().strftime("%d/%m/%Y")])
+        empty.columns = [x.replace(' ','').lower() for x in list(empty.columns)]
+                
+        info_combo = empty.merge(info_df, how='right').set_index(empty.index)
+        
+        info_combo.rename(columns={'52weekchange': 'weekchange52'}, inplace=True)
+        
+        info_combo = info_combo['longbusinesssummary'].apply(lambda x: x.replace(';', ' '))
+        
+        return info_combo
 
     def get_financials(self):
         """get financials from yahoo"""
-        tick = yf.Ticker(self.ticker)
+        tick = self.get_ticker()
         
         #get cashflow statement
         cashflow = tick.cashflow.copy()

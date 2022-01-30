@@ -11,7 +11,7 @@ def copy_from_stringio(df, table):
     """
     # save dataframe to an in memory buffer
     buffer = StringIO()
-    df.to_csv(buffer, index_label='id', header=False)
+    df.to_csv(buffer, index_label='id', header=False, sep=";")
     buffer.seek(0)
     # read database configuration
     params = config()
@@ -20,7 +20,7 @@ def copy_from_stringio(df, table):
     # create a new cursor    
     cursor = conn.cursor()
     try:
-        cursor.copy_from(buffer, table, sep=",")
+        cursor.copy_from(buffer, table, sep=";")
         conn.commit()
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error: %s" % error)
@@ -83,17 +83,24 @@ def copy_from_stringio(df, table):
             
             
 if __name__ == '__main__':
-    tickers = ['ABBV','ADBE', 'AMGN', 'AY', 'BABA', 'CARM.PA', 'CRM', 'CRSP', 'CVS', 'DUKE.L', 'EURN', 'GAIN', 'GOOGL', 'HASI', 'NXR.L', 'MO', "MSFT", 'PYPL', 'RDS-A', 'SQ', 'TCPC', 'TDOC', "TSLX", 'TCPC', 'TTE', 'TRI.PA','V']
+    #tickers = ['ABBV','ADBE', 'AMGN', 'AY', 'BABA', 'CARM.PA', 'CRM', 'CRSP', 'CVS', 'DUKE.L', 'EURN', 'GAIN', 'GOOGL', 'HASI', 'NXR.L', 'MO', "MSFT", 'PYPL', 'RDS-A', 'SQ', 'TCPC', 'TDOC', "TSLX", 'TCPC', 'TTE', 'TRI.PA','V']
+    tickers = ['ABBV','HHF.DE']
     start = time.time()
     individ = time.time()
     for ticker in tickers:
         full = Yahoo(ticker)
-        fundamentals = full.get_fundamentals()
-        copy_from_stringio(fundamentals, 'yearly_financials')
-        moat, health = full.get_checklist()
-        copy_from_stringio(moat, 'yearly_moat')
-        copy_from_stringio(health, 'yearly_health')
-        print(f"time for {ticker} : {time.time() - individ}")
-        individ = time.time()-individ
-    end = time.time()
+        try:
+            #fundamentals = full.get_fundamentals()
+            #copy_from_stringio(fundamentals, 'yearly_financials')
+            #moat, health = full.get_checklist()
+            #copy_from_stringio(moat, 'yearly_moat')
+            #copy_from_stringio(health, 'yearly_health')
+            info = full.get_info()
+            copy_from_stringio(info, 'weekly_info')
+            print(f"time for {ticker} : {time.time() - individ}")
+            individ = time.time()-individ
+        except AttributeError:
+            print(f'Attribute error for {ticker}')
+            pass
+    end = start-time.time()
     print(f"total run-time: {end/60}")
