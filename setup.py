@@ -13,5 +13,5 @@ setup(name='tracker',
       test_suite='tests',
       # include_package_data: to install data from MANIFEST.in
       include_package_data=True,
-      scripts=['scripts/tracker-run'],
+      scripts=['scripts/tracker-run', 'scripts/tracker-table', 'scripts/tracker-rows'],
       zip_safe=False)

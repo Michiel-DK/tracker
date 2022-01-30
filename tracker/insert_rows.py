@@ -27,7 +27,6 @@ def copy_from_stringio(df, table):
         conn.rollback()
         cursor.close()
         return 1
-    print("copy_from_stringio() done")
     cursor.close()
 
 # def insert_one(row):
@@ -84,15 +83,17 @@ def copy_from_stringio(df, table):
             
             
 if __name__ == '__main__':
-    tickers = ['ABBV','ADBE', 'AMGN', 'AY', 'BABA', 'CARM.PA', 'CRM', 'CRSP', 'CVS', 'DUKE.L', 'EURN', 'GAIN', 'GOOGL', 'HASI', 'HSI', 'HHFA.DE', 'NXR.L', 'MO', "MSFT", 'PLTR', 'PYPL', 'RDS-A', 'SQ', 'TCPC', 'TDOC', "TSLX", 'TCPC', 'TTE', 'TRI.PA','V' , "WEHB.BR"]
+    tickers = ['ABBV','ADBE', 'AMGN', 'AY', 'BABA', 'CARM.PA', 'CRM', 'CRSP', 'CVS', 'DUKE.L', 'EURN', 'GAIN', 'GOOGL', 'HASI', 'NXR.L', 'MO', "MSFT", 'PYPL', 'RDS-A', 'SQ', 'TCPC', 'TDOC', "TSLX", 'TCPC', 'TTE', 'TRI.PA','V']
     start = time.time()
-    print(start)
+    individ = time.time()
     for ticker in tickers:
         full = Yahoo(ticker)
         fundamentals = full.get_fundamentals()
         copy_from_stringio(fundamentals, 'yearly_financials')
-        moat, health = full.checklist()
+        moat, health = full.get_checklist()
         copy_from_stringio(moat, 'yearly_moat')
         copy_from_stringio(health, 'yearly_health')
-    end = time.time()-start
-    print(end)
+        print(f"time for {ticker} : {time.time() - individ}")
+        individ = time.time()-individ
+    end = time.time()
+    print(f"total run-time: {end/60}")

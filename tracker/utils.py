@@ -43,3 +43,17 @@ def reduce_memory_usage(df, verbose=False):
         )
         
     return df
+
+
+def print_type(df):
+    """function to print data types for sql entry"""
+    df = df.dtypes
+    for i in df.index:
+        if df.loc[i]=='int64' or df.loc[i]=='int32' or df.loc[i]=='int16' or df.loc[i]=='int8':
+            print(f"{i} BIGINT,")
+        elif df.loc[i]=='object':
+            print(f"{i} VARCHAR(n),")
+        else:
+            print(f"{i} REAL,")
+    
+    

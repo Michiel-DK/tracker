@@ -91,6 +91,7 @@ class Yahoo:
                     'revenue',
                     'roa',
                     'roe',
+                    'roic',
                     'shortlongtermdebt',
                     'shortterminvestments',
                     'ticker',
@@ -111,8 +112,6 @@ class Yahoo:
         combo_merged = combo_merged.fillna(0).astype('int')
         
         return reduce_memory_usage(combo_merged)
-        
-        #return combo, empty
     
     def get_preprocess(self):
         """preprocess data"""
@@ -126,8 +125,7 @@ class Yahoo:
         financials['cashflow'] = financials['totalcashfromoperatingactivities']
 
         
-        #return reduce_memory_usage(financials)
-        return financials
+        return reduce_memory_usage(financials)
     
     def get_fundamentals(self):
         """add fundamental ratio"""
@@ -145,6 +143,7 @@ class Yahoo:
         financials['assetturnover'] = financials['revenue']/financials['totalassets']
         financials['roa'] = financials['netmargin'] / financials['assetturnover'] 
         financials['roe'] = financials['netmargin'] * financials['assetturnover'] * (financials['totalassets'] / financials['totalstockholderequity'])
+        financials['roic'] = (financials['netincome'] - abs(financials['dividendspaid']))/(financials['shortlongtermdebt']+financials['longtermdebt']+financials['totalstockholderequity']-financials['goodwill']-financials['cash'])
         try:
             financials['equitymultipl'] = financials['totalassets'] / (financials['longtermdebt'] + financials['shortlongtermdebt'])
         except KeyError:
@@ -174,7 +173,8 @@ class Yahoo:
         try:
             financials['debtequity'] = financials['longtermdebt'] / financials['totalstockholderequity']
         except KeyError:
-            financials['debtequity'] = np.nan
+            financials['debtequity'] = financials['shortlongtermdebt'] / financials['totalstockholderequity']
+            
         financials['financialleverage'] =  financials['totalassets'] / financials['totalstockholderequity']
         financials['currentratio'] = financials['totalcurrentassets'] / financials['totalcurrentliabilities']
         try:
@@ -201,10 +201,16 @@ class Yahoo:
 
         """add financial health checklist"""
         health = pd.DataFrame()
-        health['receivablessales'] = financials['receivablessales'].apply(lambda x: 0.25/x) #low
+        try:
+            health['receivablessales'] = financials['receivablessales'].apply(lambda x: 0.25/x) #low
+        except ZeroDivisionError:
+            health['receivablessales'] = np.nan
         health['currentratio'] = financials['currentratio'].apply(lambda x: x/1)
         health['financialleverage'] = financials['financialleverage'].apply(lambda x: 4/x) #low
-        health['debtequity'] = financials['debtequity'].apply(lambda x: 1.5/x) #low
+        try:
+            health['debtequity'] = financials['debtequity'].apply(lambda x: 1.5/x) #low
+        except ZeroDivisionError:
+            health['debtequity'] = np.nan
         health['percentage'] = health.sum(axis=1)/health.count(axis=1)
         health['year'] = financials['year']
         health['ticker'] = financials['ticker']
