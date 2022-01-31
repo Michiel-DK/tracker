@@ -20,7 +20,7 @@ def copy_from_stringio(df, table):
     # create a new cursor    
     cursor = conn.cursor()
     try:
-        cursor.copy_from(buffer, table, sep=";")
+        cursor.copy_from(buffer, table, sep=";", null='')
         conn.commit()
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error: %s" % error)
@@ -90,11 +90,11 @@ if __name__ == '__main__':
     for ticker in tickers:
         full = Yahoo(ticker)
         try:
-            #fundamentals = full.get_fundamentals()
-            #copy_from_stringio(fundamentals, 'yearly_financials')
-            #moat, health = full.get_checklist()
-            #copy_from_stringio(moat, 'yearly_moat')
-            #copy_from_stringio(health, 'yearly_health')
+            fundamentals = full.get_fundamentals()
+            copy_from_stringio(fundamentals, 'yearly_financials')
+            moat, health = full.get_checklist()
+            copy_from_stringio(moat, 'yearly_moat')
+            copy_from_stringio(health, 'yearly_health')
             info = full.get_info()
             copy_from_stringio(info, 'weekly_info')
             print(f"time for {ticker} : {time.time() - individ}")

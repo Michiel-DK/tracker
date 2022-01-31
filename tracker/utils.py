@@ -53,6 +53,8 @@ def print_type(df):
             print(f"{i} BIGINT,")
         elif df.loc[i]=='object':
             print(f"{i} TEXT,")
+        elif df.loc[i]=='bool':
+            print(f"{i} boolean,")
         else:
             print(f"{i} REAL,")
     

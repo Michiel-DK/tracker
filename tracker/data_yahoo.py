@@ -186,14 +186,40 @@ class Yahoo:
                     'ytdReturn',
                     'zip']
         
-        empty = pd.DataFrame(columns=columns, index=[date.today().strftime("%d/%m/%Y")])
+        empty = pd.DataFrame(columns=columns, index=[date.today().strftime("%m/%d/%Y")])
         empty.columns = [x.replace(' ','').lower() for x in list(empty.columns)]
                 
         info_combo = empty.merge(info_df, how='right').set_index(empty.index)
         
         info_combo.rename(columns={'52weekchange': 'weekchange52'}, inplace=True)
         
-        info_combo = info_combo['longbusinesssummary'].apply(lambda x: x.replace(';', ' '))
+        info_combo['longbusinesssummary'] = info_combo['longbusinesssummary'].apply(lambda x: x.replace(';', ' '))
+        
+        int = ['targetlowprice',
+                'targetmedianprice',
+                'currentprice',
+                'targetmeanprice',
+                'targethighprice',
+                'previousclose',
+                'regularmarketopen',
+                'twohundreddayaverage',
+                'regularmarketdayhigh',
+                'regularmarketpreviousclose',
+                'fiftydayaverage',
+                'open',
+                'regularmarketdaylow',
+                'daylow',
+                'ask',
+                'fiftytwoweekhigh',
+                'fiftytwoweeklow',
+                'bid',
+                'dayhigh',
+                'regularmarketprice',
+                'premarketprice']
+        
+        info_combo[int] = info_combo[int].astype('int')
+        
+        #info_combo.fillna('null', inplace=True)
         
         return info_combo
 
