@@ -217,7 +217,9 @@ class Yahoo:
                 'regularmarketprice',
                 'premarketprice']
         
-        info_combo[int] = info_combo[int].astype('int')
+        to_change = info_combo[int].select_dtypes('int64').columns
+        
+        info_combo[to_change] = info_combo[to_change].astype('float')
         
         #info_combo.fillna('null', inplace=True)
         
