@@ -83,12 +83,13 @@ def copy_from_stringio(df, table):
             
             
 if __name__ == '__main__':
-    tickers = ['ABBV','ADBE', 'AMGN', 'AY', 'BABA', 'CARM.PA', 'CRM', 'CRSP', 'CVS', 'DUKE.L', 'EURN', 'GAIN', 'GOOGL', 'HASI', 'NXR.L', 'MO', "MSFT", 'PYPL', 'RDS-A', 'SQ', 'TCPC', 'TDOC', "TSLX", 'TCPC', 'TTE', 'TRI.PA','V', 'LMT', 'RTX', 'IIPR', 'MCO', 'TMO', 'APO', 'ABT', 'TROW', 'WSM', 'KMI', 'OKE']
+    #tickers = ['ABBV','ADBE', 'AMGN', 'AY', 'BABA', 'CARM.PA', 'CRM', 'CRSP', 'CVS', 'DUKE.L', 'EURN', 'GAIN', 'GOOGL', 'HASI', 'NXR.L', 'MO', "MSFT", 'PYPL', 'RDS-A', 'SQ', 'TCPC', 'TDOC', "TSLX", 'TCPC', 'TTE', 'TRI.PA','V', 'LMT', 'RTX', 'IIPR', 'MCO', 'TMO', 'APO', 'ABT', 'TROW', 'WSM', 'KMI', 'OKE']
+    tickers = ['AAPL', 'AKAM', 'AVGO', 'AMZN', 'SHOP', 'TWLO', 'MDB', 'MELI', 'FB', 'KLIC', 'QCOM']
     start = time.time()
-    individ = time.time()
     for ticker in tickers:
         full = Yahoo(ticker)
         try:
+            individ = time.time()
             fundamentals = full.get_fundamentals()
             copy_from_stringio(fundamentals, 'yearly_financials')
             moat, health = full.get_checklist()
@@ -101,5 +102,5 @@ if __name__ == '__main__':
         except AttributeError:
             print(f'Attribute error for {ticker}')
             pass
-    end = start-time.time()
-    print(f"total run-time: {end/60}")
+    end = time.time()-start
+    print(f"total run-time: {end/60} min")

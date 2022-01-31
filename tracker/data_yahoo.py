@@ -191,6 +191,8 @@ class Yahoo:
                 
         info_combo = empty.merge(info_df, how='right').set_index(empty.index)
         
+        info_combo = info_combo[[x.replace(' ','').lower() for x in list(empty.columns)]]
+        
         info_combo.rename(columns={'52weekchange': 'weekchange52'}, inplace=True)
         
         info_combo['longbusinesssummary'] = info_combo['longbusinesssummary'].apply(lambda x: x.replace(';', ' '))
