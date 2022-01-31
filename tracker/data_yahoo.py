@@ -12,8 +12,9 @@ class Yahoo:
     #     return super(Yahoo, cls).__new__(cls)
     
     """Class to retrieve data Yahoo finance app"""
-    def __init__(self, ticker):
+    def __init__(self, ticker, timing=None):
         self.ticker = ticker
+        self.timing = timing
         
     def get_ticker(self):
         """get ticker class from yahoo"""
@@ -230,18 +231,22 @@ class Yahoo:
     def get_financials(self):
         """get financials from yahoo"""
         tick = self.get_ticker()
+        timing = self.timing
         
-        #get cashflow statement
-        cashflow = tick.cashflow.copy()
-        cashflow.columns = [x.year for x in list(cashflow.columns)]
-        
-        #get balance sheet
-        balance = tick.balance_sheet.copy()
-        balance.columns = [x.year for x in list(balance.columns)]
-        
-        #get income sheet
-        income = tick.earnings.copy().sort_values(by='Year', ascending=False).T
-
+        if timing == "q":
+            cashflow = tick.quarterly_cashflow.copy()
+            cashflow.columns = [f"{i.year}Q{i.quarter}" for i in list(cashflow.columns)]
+            balance = tick.quarterly_balance_sheet.copy()
+            balance.columns = [f"{i.year}Q{i.quarter}" for i in list(balance.columns)]
+            income = tick.quarterly_earnings.copy().sort_values(by='Quarter', ascending=False).T
+            income.columns = [f"{i[-4:]}{i[1]}{i[0]}" for i in list(income.columns)]
+        else:
+            cashflow = tick.cashflow.copy()
+            cashflow.columns = [x.year for x in list(cashflow.columns)]
+            balance = tick.balance_sheet.copy()
+            balance.columns = [x.year for x in list(balance.columns)]
+            income = tick.earnings.copy().sort_values(by='Year', ascending=False).T
+            
         #combine in one df
         frames = [cashflow, balance, income]
         combo = pd.concat(frames).T
