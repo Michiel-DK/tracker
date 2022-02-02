@@ -406,7 +406,7 @@ class Yahoo:
         try:
             financials['goodwillassets'] = financials['goodwill'] / financials['totalcurrentassets']
         except KeyError:
-            financials['goodwillassets'] = 0
+            financials['goodwillassets'] = np.nan
         financials['receivablessales'] = financials['netreceivables'] / financials['revenue']
         
         return reduce_memory_usage(financials)
@@ -433,7 +433,10 @@ class Yahoo:
         except ZeroDivisionError:
             health['receivablessales'] = np.nan
         health['currentratio'] = financials['currentratio'].apply(lambda x: x/1)
-        health['financialleverage'] = financials['financialleverage'].apply(lambda x: 4/x) #low
+        try:
+            health['financialleverage'] = financials['financialleverage'].apply(lambda x: 4/x) #low
+        except ZeroDivisionError:
+            health['financialleverage'] = np.nan
         try:
             health['debtequity'] = financials['debtequity'].apply(lambda x: 1.5/x) #low
         except ZeroDivisionError:

@@ -86,23 +86,24 @@ def copy_from_stringio(df, table):
 if __name__ == '__main__':
     tickers = ['ABBV','ADBE', 'AMGN', 'AY', 'BABA', 'CARM.PA', 'CRM', 'CRSP', 'CVS', 'DUKE.L', 'EURN', 'GAIN', 'GOOGL', 'HASI', 'NXR.L', 'MO', "MSFT", 'PYPL', 'RDS-A', 'SQ', 'TCPC', 'TDOC', "TSLX", 'TCPC', 'TTE', 'TRI.PA','V', 'LMT', 'RTX', 'IIPR', 'MCO', 'TMO', 'APO', 'ABT', 'TROW', 'WSM', 'KMI', 'OKE', 'AAPL', 'AKAM', 'AVGO', 'AMZN', 'SHOP', 'TWLO', 'MDB', 'MELI', 'FB', 'KLIC', 'QCOM','CRWD', 'FISV', 'SOFI', 'DOCN', 'COIN', 'ASML', 'TXN', 'SMG']
     #tickers = ['ZAL.DE']
+    #STX OCSE:SIM
     start = time.time()
-    for ticker in tickers:
-        full = Yahoo(ticker, timing='q')
-        try:
-            individ = time.time()
-            fundamentals = full.get_fundamentals()
-            copy_from_stringio(fundamentals, 'quarterly_financials')
-            moat, health = full.get_checklist()
-            copy_from_stringio(moat, 'quarterly_moat')
-            copy_from_stringio(health, 'quarterly_health')
-            print(f"time for {ticker} : {time.time() - individ}")
-            individ = time.time()-individ
-        except AttributeError:
-            print(f'Attribute error for {ticker}')
-            pass
-    end = time.time()-start
-    print(f"total run-time quarterly + info: {end/60} min")
+    # for ticker in tickers:
+    #     full = Yahoo(ticker, timing='q')
+    #     try:
+    #         individ = time.time()
+    #         fundamentals = full.get_fundamentals()
+    #         copy_from_stringio(fundamentals, 'quarterly_financials')
+    #         moat, health = full.get_checklist()
+    #         copy_from_stringio(moat, 'quarterly_moat')
+    #         copy_from_stringio(health, 'quarterly_health')
+    #         print(f"time for {ticker} : {time.time() - individ}")
+    #         individ = time.time()-individ
+    #     except AttributeError:
+    #         print(f'Attribute error for {ticker}')
+    #         pass
+    # end = time.time()-start
+    # print(f"total run-time quarterly + info: {end/60} min")
 
     start = time.time()
     for ticker in tickers:
@@ -114,8 +115,6 @@ if __name__ == '__main__':
             moat, health = full.get_checklist()
             copy_from_stringio(moat, 'yearly_moat')
             copy_from_stringio(health, 'yearly_health')
-            info = full.get_info()
-            copy_from_stringio(info, 'weekly_info')
             print(f"time for {ticker} : {time.time() - individ}")
             individ = time.time()-individ
         except AttributeError:
