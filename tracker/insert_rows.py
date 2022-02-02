@@ -108,7 +108,7 @@ if __name__ == '__main__':
             copy_from_stringio(growth, 'quarterly_growth')
             print(f"time for q {ticker} : {time.time() - individ}")
             time_q.append(time.time() - individ)
-        except AttributeError or KeyError:
+        except (AttributeError or KeyError) as error:
             if AttributeError:
                 print(f'Attribute error for q {ticker}')
             elif KeyError:
@@ -130,7 +130,7 @@ if __name__ == '__main__':
             copy_from_stringio(growth, 'yearly_growth')
             print(f"time for y {ticker} : {time.time() - individ}")
             time_y.append(time.time() - individ)
-        except AttributeError or KeyError:
+        except (AttributeError or KeyError) as error:
             if AttributeError:
                 print(f'Attribute error for y {ticker}')
             elif KeyError:
@@ -147,7 +147,7 @@ if __name__ == '__main__':
             copy_from_stringio(info, 'weekly_info')
             print(f"time for i {ticker} : {time.time() - individ}")
             time_i.append(time.time() - individ)
-        except AttributeError or KeyError:
+        except (AttributeError or KeyError) as error:
             if AttributeError:
                 print(f'Attribute error for i {ticker}')
             elif KeyError:
