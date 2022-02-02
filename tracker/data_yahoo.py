@@ -224,6 +224,10 @@ class Yahoo:
         
         info_combo[to_change] = info_combo[to_change].astype('float')
         
+        info_combo = info_combo.reset_index().rename(columns={'symbol':'ticker', 'index':'date'})
+        
+        info_combo['key'] = info_combo['date'].astype('str') + info_combo['ticker']
+        
         #info_combo.fillna('null', inplace=True)
         
         return info_combo
@@ -335,13 +339,17 @@ class Yahoo:
         """preprocess data"""
         financials = self.get_financials()
         ticker = self.ticker
+        timing = self.timing
+        
         financials = financials.reset_index().rename(columns={'index':'year'})
         #financials.fillna(0, inplace=True)
         #financials = financials.astype('int')
         financials['ticker'] = ticker
         financials.sort_index(inplace=True)
         financials['cashflow'] = financials['totalcashfromoperatingactivities']
-
+        
+        financials['key'] = financials['year'].astype('str') + financials['ticker']
+ 
         
         return reduce_memory_usage(financials)
     
@@ -413,9 +421,10 @@ class Yahoo:
         moat['netmargin'] = financials['netmargin'].apply(lambda x: x/0.15)
         moat['roa'] = financials['netmargin'].apply(lambda x: x/0.06)
         moat['roe'] = financials['netmargin'].apply(lambda x: x/0.01)
-        moat['moatpercentage'] = moat.sum(axis=1)/moat.count(axis=1)
+        moat['average'] = moat.sum(axis=1)/moat.count(axis=1)
         moat['year'] = financials['year']
         moat['ticker'] = financials['ticker']
+        moat['key'] = financials['key']
 
         """add financial health checklist"""
         health = pd.DataFrame()
@@ -429,9 +438,10 @@ class Yahoo:
             health['debtequity'] = financials['debtequity'].apply(lambda x: 1.5/x) #low
         except ZeroDivisionError:
             health['debtequity'] = np.nan
-        health['percentage'] = health.sum(axis=1)/health.count(axis=1)
+        health['average'] = health.sum(axis=1)/health.count(axis=1)
         health['year'] = financials['year']
         health['ticker'] = financials['ticker']
+        health['key'] = financials['key']
         
         return reduce_memory_usage(moat), reduce_memory_usage(health)
 

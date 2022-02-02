@@ -84,9 +84,25 @@ def copy_from_stringio(df, table):
             
             
 if __name__ == '__main__':
-    #tickers = ['ABBV','ADBE', 'AMGN', 'AY', 'BABA', 'CARM.PA', 'CRM', 'CRSP', 'CVS', 'DUKE.L', 'EURN', 'GAIN', 'GOOGL', 'HASI', 'NXR.L', 'MO', "MSFT", 'PYPL', 'RDS-A', 'SQ', 'TCPC', 'TDOC', "TSLX", 'TCPC', 'TTE', 'TRI.PA','V', 'LMT', 'RTX', 'IIPR', 'MCO', 'TMO', 'APO', 'ABT', 'TROW', 'WSM', 'KMI', 'OKE']
-    #tickers = ['AAPL', 'AKAM', 'AVGO', 'AMZN', 'SHOP', 'TWLO', 'MDB', 'MELI', 'FB', 'KLIC', 'QCOM']
-    tickers = ['CRWD', 'FISV', 'SOFI', 'DOCN', 'COIN', 'ASML', 'TXN', 'SMG']
+    tickers = ['ABBV','ADBE', 'AMGN', 'AY', 'BABA', 'CARM.PA', 'CRM', 'CRSP', 'CVS', 'DUKE.L', 'EURN', 'GAIN', 'GOOGL', 'HASI', 'NXR.L', 'MO', "MSFT", 'PYPL', 'RDS-A', 'SQ', 'TCPC', 'TDOC', "TSLX", 'TCPC', 'TTE', 'TRI.PA','V', 'LMT', 'RTX', 'IIPR', 'MCO', 'TMO', 'APO', 'ABT', 'TROW', 'WSM', 'KMI', 'OKE', 'AAPL', 'AKAM', 'AVGO', 'AMZN', 'SHOP', 'TWLO', 'MDB', 'MELI', 'FB', 'KLIC', 'QCOM','CRWD', 'FISV', 'SOFI', 'DOCN', 'COIN', 'ASML', 'TXN', 'SMG']
+    start = time.time()
+    for ticker in tickers:
+        full = Yahoo(ticker, timing='q')
+        try:
+            individ = time.time()
+            fundamentals = full.get_fundamentals()
+            copy_from_stringio(fundamentals, 'quarterly_financials')
+            moat, health = full.get_checklist()
+            copy_from_stringio(moat, 'quarterly_moat')
+            copy_from_stringio(health, 'quarterly_health')
+            print(f"time for {ticker} : {time.time() - individ}")
+            individ = time.time()-individ
+        except AttributeError:
+            print(f'Attribute error for {ticker}')
+            pass
+    end = time.time()-start
+    print(f"total run-time quarterly + info: {end/60} min")
+
     start = time.time()
     for ticker in tickers:
         full = Yahoo(ticker)
@@ -105,4 +121,4 @@ if __name__ == '__main__':
             print(f'Attribute error for {ticker}')
             pass
     end = time.time()-start
-    print(f"total run-time: {end/60} min")
+    print(f"total run-time yearly + info: {end/60} min")
