@@ -1,6 +1,8 @@
 import psycopg2
 from yfinance import Tickers
 from tracker.postgres import connect, config
+from tracker.tickers import get_tickers
+import numpy as np
 from tracker.data_yahoo import Yahoo
 from io import StringIO
 import time
@@ -84,26 +86,32 @@ def copy_from_stringio(df, table):
             
             
 if __name__ == '__main__':
-    tickers = ['ABBV','ADBE', 'AMGN', 'AY', 'BABA', 'CARM.PA', 'CRM', 'CRSP', 'CVS', 'DUKE.L', 'EURN', 'GAIN', 'GOOGL', 'HASI', 'NXR.L', 'MO', "MSFT", 'PYPL', 'RDS-A', 'SQ', 'TCPC', 'TDOC', "TSLX", 'TCPC', 'TTE', 'TRI.PA','V', 'LMT', 'RTX', 'IIPR', 'MCO', 'TMO', 'APO', 'ABT', 'TROW', 'WSM', 'KMI', 'OKE', 'AAPL', 'AKAM', 'AVGO', 'AMZN', 'SHOP', 'TWLO', 'MDB', 'MELI', 'FB', 'KLIC', 'QCOM','CRWD', 'FISV', 'SOFI', 'DOCN', 'COIN', 'ASML', 'TXN', 'SMG']
-    #tickers = ['ZAL.DE']
-    #STX OCSE:SIM
     start = time.time()
-    # for ticker in tickers:
-    #     full = Yahoo(ticker, timing='q')
-    #     try:
-    #         individ = time.time()
-    #         fundamentals = full.get_fundamentals()
-    #         copy_from_stringio(fundamentals, 'quarterly_financials')
-    #         moat, health = full.get_checklist()
-    #         copy_from_stringio(moat, 'quarterly_moat')
-    #         copy_from_stringio(health, 'quarterly_health')
-    #         print(f"time for {ticker} : {time.time() - individ}")
-    #         individ = time.time()-individ
-    #     except AttributeError:
-    #         print(f'Attribute error for {ticker}')
-    #         pass
-    # end = time.time()-start
-    # print(f"total run-time quarterly + info: {end/60} min")
+    not_found_q = []
+    time_q = []
+    not_found_y = []
+    time_y = []
+    not_found_i = []
+    time_i = []
+    tickers = get_tickers()
+    first = tickers[:round(len(tickers)/3)]
+    for ticker in first:
+        full = Yahoo(ticker, timing='q')
+        try:
+            individ = time.time()
+            fundamentals = full.get_fundamentals()
+            copy_from_stringio(fundamentals, 'quarterly_financials')
+            moat, health = full.get_checklist()
+            copy_from_stringio(moat, 'quarterly_moat')
+            copy_from_stringio(health, 'quarterly_health')
+            growth = full.get_growth()
+            copy_from_stringio(growth, 'quarterly_growth')
+            print(f"time for q {ticker} : {time.time() - individ}")
+            time_q.append(time.time() - individ)
+        except AttributeError:
+            print(f'Attribute error for q {ticker}')
+            not_found_q.append(ticker)
+            pass
 
     start = time.time()
     for ticker in tickers:
@@ -115,10 +123,35 @@ if __name__ == '__main__':
             moat, health = full.get_checklist()
             copy_from_stringio(moat, 'yearly_moat')
             copy_from_stringio(health, 'yearly_health')
-            print(f"time for {ticker} : {time.time() - individ}")
-            individ = time.time()-individ
+            growth = full.get_growth()
+            copy_from_stringio(growth, 'yearly_growth')
+            print(f"time for y {ticker} : {time.time() - individ}")
+            time_y.append(time.time() - individ)
         except AttributeError:
-            print(f'Attribute error for {ticker}')
+            print(f'Attribute error for y {ticker}')
+            not_found_y.append(ticker)
             pass
+        
+    start = time.time()
+    for ticker in tickers:
+        full = Yahoo(ticker)
+        try:
+            individ = time.time()
+            info = full.get_info()
+            copy_from_stringio(info, 'weekly_info')
+            print(f"time for i {ticker} : {time.time() - individ}")
+            time_i.append(time.time() - individ)
+        except AttributeError:
+            print(f'Attribute error for i {ticker}')
+            not_found_i.append(ticker)
+            pass
+        
     end = time.time()-start
-    print(f"total run-time yearly + info: {end/60} min")
+    print(f"total run-time info: {end/60} min")
+    print(f"total time q {sum(time_q)/60}, avg time q {np.mean(time_q)}")
+    print(f"not found q {not_found_q}")
+    print(f"total time y {sum(time_y)/60}, avg time y {np.mean(time_y)}")
+    print(f"not found y {not_found_y}")
+    print(f"total time i {sum(time_i)/60}, avg time i {np.mean(time_i)}")
+    print(f"not found i {not_found_i}")
+          
