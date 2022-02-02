@@ -1,4 +1,5 @@
 import psycopg2
+from yfinance import Tickers
 from tracker.postgres import connect, config
 from tracker.data_yahoo import Yahoo
 from io import StringIO
@@ -84,7 +85,8 @@ def copy_from_stringio(df, table):
             
 if __name__ == '__main__':
     #tickers = ['ABBV','ADBE', 'AMGN', 'AY', 'BABA', 'CARM.PA', 'CRM', 'CRSP', 'CVS', 'DUKE.L', 'EURN', 'GAIN', 'GOOGL', 'HASI', 'NXR.L', 'MO', "MSFT", 'PYPL', 'RDS-A', 'SQ', 'TCPC', 'TDOC', "TSLX", 'TCPC', 'TTE', 'TRI.PA','V', 'LMT', 'RTX', 'IIPR', 'MCO', 'TMO', 'APO', 'ABT', 'TROW', 'WSM', 'KMI', 'OKE']
-    tickers = ['AAPL', 'AKAM', 'AVGO', 'AMZN', 'SHOP', 'TWLO', 'MDB', 'MELI', 'FB', 'KLIC', 'QCOM']
+    #tickers = ['AAPL', 'AKAM', 'AVGO', 'AMZN', 'SHOP', 'TWLO', 'MDB', 'MELI', 'FB', 'KLIC', 'QCOM']
+    tickers = ['CRWD', 'FISV', 'SOFI', 'DOCN', 'COIN', 'ASML', 'TXN', 'SMG']
     start = time.time()
     for ticker in tickers:
         full = Yahoo(ticker)
