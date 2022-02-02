@@ -108,8 +108,11 @@ if __name__ == '__main__':
             copy_from_stringio(growth, 'quarterly_growth')
             print(f"time for q {ticker} : {time.time() - individ}")
             time_q.append(time.time() - individ)
-        except AttributeError:
-            print(f'Attribute error for q {ticker}')
+        except AttributeError or KeyError:
+            if AttributeError:
+                print(f'Attribute error for q {ticker}')
+            elif KeyError:
+                print(f'Key error for q {ticker}')
             not_found_q.append(ticker)
             pass
 
@@ -127,8 +130,11 @@ if __name__ == '__main__':
             copy_from_stringio(growth, 'yearly_growth')
             print(f"time for y {ticker} : {time.time() - individ}")
             time_y.append(time.time() - individ)
-        except AttributeError:
-            print(f'Attribute error for y {ticker}')
+        except AttributeError or KeyError:
+            if AttributeError:
+                print(f'Attribute error for y {ticker}')
+            elif KeyError:
+                print(f'Key error for y {ticker}')
             not_found_y.append(ticker)
             pass
         
@@ -141,8 +147,11 @@ if __name__ == '__main__':
             copy_from_stringio(info, 'weekly_info')
             print(f"time for i {ticker} : {time.time() - individ}")
             time_i.append(time.time() - individ)
-        except AttributeError:
-            print(f'Attribute error for i {ticker}')
+        except AttributeError or KeyError:
+            if AttributeError:
+                print(f'Attribute error for i {ticker}')
+            elif KeyError:
+                print(f'Key error for i {ticker}')
             not_found_i.append(ticker)
             pass
         
