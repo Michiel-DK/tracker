@@ -85,6 +85,7 @@ def copy_from_stringio(df, table):
             
 if __name__ == '__main__':
     tickers = ['ABBV','ADBE', 'AMGN', 'AY', 'BABA', 'CARM.PA', 'CRM', 'CRSP', 'CVS', 'DUKE.L', 'EURN', 'GAIN', 'GOOGL', 'HASI', 'NXR.L', 'MO', "MSFT", 'PYPL', 'RDS-A', 'SQ', 'TCPC', 'TDOC', "TSLX", 'TCPC', 'TTE', 'TRI.PA','V', 'LMT', 'RTX', 'IIPR', 'MCO', 'TMO', 'APO', 'ABT', 'TROW', 'WSM', 'KMI', 'OKE', 'AAPL', 'AKAM', 'AVGO', 'AMZN', 'SHOP', 'TWLO', 'MDB', 'MELI', 'FB', 'KLIC', 'QCOM','CRWD', 'FISV', 'SOFI', 'DOCN', 'COIN', 'ASML', 'TXN', 'SMG']
+    #tickers = ['ZAL.DE']
     start = time.time()
     for ticker in tickers:
         full = Yahoo(ticker, timing='q')

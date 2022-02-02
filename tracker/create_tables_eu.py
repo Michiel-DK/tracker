@@ -78,7 +78,7 @@ def create_tables():
                 totalliab BIGINT,
                 totalstockholderequity BIGINT,
                 treasurystock BIGINT,
-                key VARCHAR (10) UNIQUE
+                key VARCHAR (12) UNIQUE
         )
         """,
         """ CREATE TABLE yearly_moat (
@@ -89,9 +89,9 @@ def create_tables():
                 roa REAL,
                 roe REAL,
                 moatpercentage REAL,
-                year REAL,
+                year INT,
                 ticker VARCHAR(8),
-                key VARCHAR (10) UNIQUE
+                key VARCHAR (12) UNIQUE
         )
         """,
         """CREATE TABLE yearly_health (
@@ -101,14 +101,14 @@ def create_tables():
                 financialleverage REAL,
                 debtequity REAL,
                 percentage REAL,
-                year REAL,
+                year INT,
                 ticker VARCHAR(8),
-                key VARCHAR (10) UNIQUE
+                key VARCHAR (12) UNIQUE
             )
         """,
         """CREATE TABLE quarterly_financials (
                 index BIGINT,
-                year BIGINT,
+                year VARCHAR(6),
                 accountspayable BIGINT,
                 assetturnover REAL,
                 capitalexpenditures BIGINT,
@@ -178,7 +178,7 @@ def create_tables():
                 totalliab BIGINT,
                 totalstockholderequity BIGINT,
                 treasurystock BIGINT,
-                key VARCHAR (10) UNIQUE
+                key VARCHAR (16) UNIQUE
         )
         """,
         """ CREATE TABLE quarterly_moat (
@@ -189,9 +189,9 @@ def create_tables():
                 roa REAL,
                 roe REAL,
                 moatpercentage REAL,
-                year REAL,
+                year VARCHAR(6),
                 ticker VARCHAR(8),
-                key VARCHAR (10) UNIQUE
+                key VARCHAR (16) UNIQUE
         )
         """,
         """CREATE TABLE quarterly_health (
@@ -201,9 +201,9 @@ def create_tables():
                 financialleverage REAL,
                 debtequity REAL,
                 percentage REAL,
-                year REAL,
+                year VARCHAR(6),
                 ticker VARCHAR(8),
-                key VARCHAR (10) UNIQUE
+                key VARCHAR (16) UNIQUE
             )
         """,
         """CREATE TABLE weekly_info (
