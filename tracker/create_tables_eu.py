@@ -106,6 +106,32 @@ def create_tables():
                 key VARCHAR (12) UNIQUE
             )
         """,
+        """ CREATE TABLE yearly_growth (
+                index INT,
+                capitalexpenditures REAL,
+                cash REAL,
+                fcf REAL,
+                goodwill REAL,
+                netincome REAL,
+                revenue REAL,
+                longtermdebt REAL,
+                assetturnover REAL,
+                fcfmargin REAL,
+                netmargin REAL,
+                operatingmargin REAL,
+                roa REAL,
+                roe REAL,
+                roic REAL,
+                currentratio REAL,
+                financialleverage REAL,
+                receivablessales REAL,
+                debtequity REAL,
+                equityasset REAL,
+                goodwillassets REAL,
+                ticker VARCHAR(8),
+                key VARCHAR (12) UNIQUE
+                )
+            """,
         """CREATE TABLE quarterly_financials (
                 index BIGINT,
                 year VARCHAR(6),
@@ -206,6 +232,32 @@ def create_tables():
                 key VARCHAR (16) UNIQUE
             )
         """,
+        """ CREATE TABLE quarterly_growth (
+                index INT,
+                capitalexpenditures REAL,
+                cash REAL,
+                fcf REAL,
+                goodwill REAL,
+                netincome REAL,
+                revenue REAL,
+                longtermdebt REAL,
+                assetturnover REAL,
+                fcfmargin REAL,
+                netmargin REAL,
+                operatingmargin REAL,
+                roa REAL,
+                roe REAL,
+                roic REAL,
+                currentratio REAL,
+                financialleverage REAL,
+                receivablessales REAL,
+                debtequity REAL,
+                equityasset REAL,
+                goodwillassets REAL,
+                ticker VARCHAR(8),
+                key VARCHAR (16) UNIQUE
+                )
+            """,
         """CREATE TABLE weekly_info (
                 index BIGINT,
                 date DATE,

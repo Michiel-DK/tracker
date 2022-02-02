@@ -448,6 +448,28 @@ class Yahoo:
         
         return reduce_memory_usage(moat), reduce_memory_usage(health)
 
+    def get_growth(self):
+        pd.options.mode.chained_assignment = None
+        fundamentals = self.get_fundamentals().sort_values(by='year', ascending=True)
+        
+        growth = fundamentals\
+            [['capitalexpenditures', 'cash', 'fcf', 'goodwill', 'netincome', 'revenue', 'longtermdebt', \
+            'assetturnover', 'fcfmargin', 'netmargin', 'operatingmargin', 'roa', 'roe', 'roic',\
+                'currentratio', 'financialleverage', 'receivablessales', 'debtequity', 'equityasset', 'goodwillassets']]
+            
+        floats = ['assetturnover', 'fcfmargin', 'netmargin', 'operatingmargin', 'roa', 'roe', 'roic',\
+                'currentratio', 'financialleverage', 'receivablessales', 'debtequity', 'equityasset', 'goodwillassets']
+        
+        growth[floats] = growth.loc[:,floats].astype('float32')
+        
+        growth = growth.pct_change()
+        
+        growth['year'] = fundamentals['year']
+        growth['key'] = fundamentals['key']
+        
+        return reduce_memory_usage(growth.iloc[1: , :])
+
+        
 if __name__ == '__main__':
     tri = Yahoo('TRI.PA').get_fundamentals()
     print(tri)
