@@ -44,4 +44,4 @@ def get_tickers():
     
     undoubled_merged = [x for x in merged if x not in doubles_y]
     
-    return undoubled_merged
+    return sorted(undoubled_merged)

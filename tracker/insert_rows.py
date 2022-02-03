@@ -6,6 +6,8 @@ import numpy as np
 from tracker.data_yahoo import Yahoo
 from io import StringIO
 import time
+import sys
+
 
 def copy_from_stringio(df, table):
     """
@@ -94,8 +96,9 @@ if __name__ == '__main__':
     not_found_i = []
     time_i = []
     tickers = get_tickers()
-    first = tickers[:round(len(tickers)/3)]
-    for ticker in first:
+    third = round(len(tickers)/3)
+    select = tickers[third:third*2]
+    for ticker in select:
         full = Yahoo(ticker, timing='q')
         try:
             individ = time.time()
@@ -106,18 +109,21 @@ if __name__ == '__main__':
             copy_from_stringio(health, 'quarterly_health')
             growth = full.get_growth()
             copy_from_stringio(growth, 'quarterly_growth')
-            print(f"time for q {ticker} : {time.time() - individ}")
+            #print(f"time for q {ticker} : {time.time() - individ}")
+            print(f"q - {ticker}")
             time_q.append(time.time() - individ)
-        except (AttributeError or KeyError) as error:
-            if AttributeError:
+        except AttributeError:
                 print(f'Attribute error for q {ticker}')
-            elif KeyError:
+                not_found_q.append(ticker)
+                pass
+        except KeyError:
                 print(f'Key error for q {ticker}')
-            not_found_q.append(ticker)
-            pass
+                not_found_q.append(ticker)
+                pass
 
     start = time.time()
-    for ticker in tickers:
+    print("y")
+    for ticker in select:
         full = Yahoo(ticker)
         try:
             individ = time.time()
@@ -128,33 +134,37 @@ if __name__ == '__main__':
             copy_from_stringio(health, 'yearly_health')
             growth = full.get_growth()
             copy_from_stringio(growth, 'yearly_growth')
-            print(f"time for y {ticker} : {time.time() - individ}")
+            #print(f"time for y {ticker} : {time.time() - individ}")
+            print(f"y - {ticker}")
             time_y.append(time.time() - individ)
-        except (AttributeError or KeyError) as error:
-            if AttributeError:
+        except AttributeError:
                 print(f'Attribute error for y {ticker}')
-            elif KeyError:
+                not_found_y.append(ticker)
+                pass
+        except KeyError:
                 print(f'Key error for y {ticker}')
-            not_found_y.append(ticker)
-            pass
-        
+                not_found_y.append(ticker)
+                pass
+    
+    print("i")
     start = time.time()
-    for ticker in tickers:
+    for ticker in select:
         full = Yahoo(ticker)
         try:
             individ = time.time()
             info = full.get_info()
             copy_from_stringio(info, 'weekly_info')
-            print(f"time for i {ticker} : {time.time() - individ}")
+            #print(f"time for i {ticker} : {time.time() - individ}")
             time_i.append(time.time() - individ)
-        except (AttributeError or KeyError) as error:
-            if AttributeError:
+            print(f"i - {ticker}")
+        except AttributeError:
                 print(f'Attribute error for i {ticker}')
-            elif KeyError:
+                not_found_i.append(ticker)
+                pass
+        except KeyError:
                 print(f'Key error for i {ticker}')
-            not_found_i.append(ticker)
-            pass
-        
+                not_found_i.append(ticker)
+                pass
     end = time.time()-start
     print(f"total run-time info: {end/60} min")
     print(f"total time q {sum(time_q)/60}, avg time q {np.mean(time_q)}")
@@ -163,4 +173,3 @@ if __name__ == '__main__':
     print(f"not found y {not_found_y}")
     print(f"total time i {sum(time_i)/60}, avg time i {np.mean(time_i)}")
     print(f"not found i {not_found_i}")
-          
