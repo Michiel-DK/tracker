@@ -97,7 +97,7 @@ if __name__ == '__main__':
     time_i = []
     tickers = get_tickers()
     third = round(len(tickers)/3)
-    select = tickers[third:third*2]
+    select = tickers[third*2:third*3+1]
     for ticker in select:
         full = Yahoo(ticker, timing='q')
         try:
@@ -173,3 +173,6 @@ if __name__ == '__main__':
     print(f"not found y {not_found_y}")
     print(f"total time i {sum(time_i)/60}, avg time i {np.mean(time_i)}")
     print(f"not found i {not_found_i}")
+    
+    
+    #build in ticker check foreign + US
