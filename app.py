@@ -2,7 +2,7 @@ import streamlit as st
 from tracker.postgres import connect, config
 import psycopg2
 import pandas as pd
-from tracker.frontend_functions import get_quarterly_health, get_quarterly_moat, get_yearly_health, get_yearly_moat
+from tracker.frontend_functions import *
 
 params = config(filename='/Users/admin/code/Michiel-DK/tracker/database.ini', section='postgresql')
 
@@ -19,14 +19,24 @@ option = st.selectbox(
      'Ticker or name?',
      all_tickers)
 
-col1, col2 = st.columns([1,1])
+col1, col2, col3, col4 = st.columns([1,1,1,1])
 
 with col1:
-    q = st.button('Quarterly')
+    i = st.button('Company info')
 with col2:
+    c = st.button('Current data')
+with col3:
+    q = st.button('Quarterly')
+with col4:
     y = st.button('Yearly')
 
 if option:
+    if (i and option):
+        weekly = get_weekly(option[1])
+        st.header(weekly.to_dict('records')[0]['longname'])
+        st.table(weekly[['sector', 'industry', 'market', 'marketcap', 'enterprisevalue']])
+        st.write(weekly.to_dict('records')[0]['longbusinesssummary'])
+        
     if (q and option):
         st.header("Quarterly Moat")
         st.table(get_quarterly_moat(option[1]))
