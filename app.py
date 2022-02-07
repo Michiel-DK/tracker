@@ -31,11 +31,20 @@ with col4:
     y = st.button('Yearly')
 
 if option:
+    weekly = get_weekly(option[1])
+    st.header(weekly[0].to_dict('records')[0]['longname'])
     if (i and option):
-        weekly = get_weekly(option[1])
-        st.header(weekly.to_dict('records')[0]['longname'])
-        st.table(weekly[['sector', 'industry', 'market', 'marketcap', 'enterprisevalue']])
-        st.write(weekly.to_dict('records')[0]['longbusinesssummary'])
+        weekly_comp = weekly[0]
+        #st.header(weekly.to_dict('records')[0]['longname'])
+        st.table(weekly_comp[['sector', 'industry', 'market', 'marketcap', 'enterprisevalue']])
+        st.write(weekly_comp.to_dict('records')[0]['longbusinesssummary'])
+        
+    if (c and option):
+        weekly_value = weekly[1]
+        st.table(weekly[1].T)
+        st.table(weekly[2].T)
+        st.table(weekly[3].T)
+        st.table(weekly[4])
         
     if (q and option):
         st.header("Quarterly Moat")

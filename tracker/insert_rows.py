@@ -7,6 +7,7 @@ from tracker.data_yahoo import Yahoo
 from io import StringIO
 import time
 import sys
+import pandas as pd
 
 
 def copy_from_stringio(df, table):
@@ -95,56 +96,57 @@ if __name__ == '__main__':
     time_y = []
     not_found_i = []
     time_i = []
-    tickers = get_tickers()
-    third = round(len(tickers)/3)
-    select = tickers[:132]
-    # for ticker in select:
-    #     full = Yahoo(ticker, timing='q')
-    #     try:
-    #         individ = time.time()
-    #         fundamentals = full.get_fundamentals()
-    #         copy_from_stringio(fundamentals, 'quarterly_financials')
-    #         moat, health = full.get_checklist()
-    #         copy_from_stringio(moat, 'quarterly_moat')
-    #         copy_from_stringio(health, 'quarterly_health')
-    #         growth = full.get_growth()
-    #         copy_from_stringio(growth, 'quarterly_growth')
-    #         #print(f"time for q {ticker} : {time.time() - individ}")
-    #         print(f"q - {ticker}")
-    #         time_q.append(time.time() - individ)
-    #     except AttributeError:
-    #             print(f'Attribute error for q {ticker}')
-    #             not_found_q.append(ticker)
-    #             pass
-    #     except KeyError:
-    #             print(f'Key error for q {ticker}')
-    #             not_found_q.append(ticker)
-    #             pass
+    #tickers = get_tickers()
+    tickers = list(pd.read_csv('tracker/data/extra_ls.csv')['0'])
+    #third = round(len(tickers)/3)
+    select = tickers[:300]
+    for ticker in select:
+        full = Yahoo(ticker, timing='q')
+        try:
+            individ = time.time()
+            fundamentals = full.get_fundamentals()
+            copy_from_stringio(fundamentals, 'quarterly_financials')
+            moat, health = full.get_checklist()
+            copy_from_stringio(moat, 'quarterly_moat')
+            copy_from_stringio(health, 'quarterly_health')
+            growth = full.get_growth()
+            copy_from_stringio(growth, 'quarterly_growth')
+            #print(f"time for q {ticker} : {time.time() - individ}")
+            print(f"q - {ticker}")
+            time_q.append(time.time() - individ)
+        except AttributeError:
+                print(f'Attribute error for q {ticker}')
+                not_found_q.append(ticker)
+                pass
+        except KeyError:
+                print(f'Key error for q {ticker}')
+                not_found_q.append(ticker)
+                pass
 
-    # start = time.time()
-    # print("y")
-    # for ticker in select:
-    #     full = Yahoo(ticker)
-    #     try:
-    #         individ = time.time()
-    #         fundamentals = full.get_fundamentals()
-    #         copy_from_stringio(fundamentals, 'yearly_financials')
-    #         moat, health = full.get_checklist()
-    #         copy_from_stringio(moat, 'yearly_moat')
-    #         copy_from_stringio(health, 'yearly_health')
-    #         growth = full.get_growth()
-    #         copy_from_stringio(growth, 'yearly_growth')
-    #         #print(f"time for y {ticker} : {time.time() - individ}")
-    #         print(f"y - {ticker}")
-    #         time_y.append(time.time() - individ)
-    #     except AttributeError:
-    #             print(f'Attribute error for y {ticker}')
-    #             not_found_y.append(ticker)
-    #             pass
-    #     except KeyError:
-    #             print(f'Key error for y {ticker}')
-    #             not_found_y.append(ticker)
-    #             pass
+    start = time.time()
+    print("y")
+    for ticker in select:
+        full = Yahoo(ticker)
+        try:
+            individ = time.time()
+            fundamentals = full.get_fundamentals()
+            copy_from_stringio(fundamentals, 'yearly_financials')
+            moat, health = full.get_checklist()
+            copy_from_stringio(moat, 'yearly_moat')
+            copy_from_stringio(health, 'yearly_health')
+            growth = full.get_growth()
+            copy_from_stringio(growth, 'yearly_growth')
+            #print(f"time for y {ticker} : {time.time() - individ}")
+            print(f"y - {ticker}")
+            time_y.append(time.time() - individ)
+        except AttributeError:
+                print(f'Attribute error for y {ticker}')
+                not_found_y.append(ticker)
+                pass
+        except KeyError:
+                print(f'Key error for y {ticker}')
+                not_found_y.append(ticker)
+                pass
     
     print("i")
     start = time.time()

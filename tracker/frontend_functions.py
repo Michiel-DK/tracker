@@ -60,4 +60,8 @@ def get_weekly(ticker):
     weekly_info = pd.DataFrame(weekly, columns=colnames).drop(columns='index')
     weekly_info.index = weekly_info['date']
     company_info = weekly_info[['ticker','logo_url','sector', 'marketcap', 'market', 'longname', 'longbusinesssummary', 'industry', 'enterprisevalue']]
-    return company_info
+    company_value = weekly_info[['trailingpe', 'trailingeps', 'totalcashpershare', 'revenuepershare', 'pricetosalestrailing12months', 'pegratio','forwardpe', 'forwardeps', 'enterprisetorevenue', 'enterprisetoebitda', 'beta'  ]]
+    company_div = weekly_info[['dividendrate', 'dividendyield', 'exdividenddate', 'fiveyearavgdividendyield', 'lastdividenddate', 'lastdividendvalue']]
+    company_momentum = weekly_info[['fiftytwoweeklow', 'fiftydayaverage', 'fiftytwoweekhigh', 'currentprice']]
+    company_recom = weekly_info[['targetmedianprice', 'targetmeanprice', 'targetlowprice', 'targethighprice', 'regularmarketprice', 'recommendationkey', 'recommendationmean']]
+    return company_info, company_value, company_div, company_momentum, company_recom
