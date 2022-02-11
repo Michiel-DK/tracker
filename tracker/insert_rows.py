@@ -100,7 +100,9 @@ if __name__ == '__main__':
     tickers = list(pd.read_csv('tracker/data/extra_ls.csv')['0'])
     #third = round(len(tickers)/3)
     # get weekly from APPN (118) - 300
-    select = tickers[1600:]
+    #check 1600-1800
+    select = tickers[-300:]
+    print(select)
     for ticker in select:
         full = Yahoo(ticker, timing='q')
         try:
