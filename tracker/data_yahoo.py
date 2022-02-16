@@ -251,89 +251,94 @@ class Yahoo:
             balance.columns = [x.year for x in list(balance.columns)]
             income = tick.earnings.copy().sort_values(by='Year', ascending=False).T
             
-        #combine in one df
-        frames = [cashflow, balance, income]
-        combo = pd.concat(frames).T
-        combo.columns = [x.replace(' ','').lower() for x in list(combo.columns)]
-                
-        #add with total possible columns
-        columns = ['accountspayable',
-                    'assetturnover',
-                    'capitalexpenditures',
-                    'capitalsurplus',
-                    'cash',
-                    'cashdebt',
-                    'cashflow',
-                    'changeincash',
-                    'changetoaccountreceivables',
-                    'changetoinventory',
-                    'changetoliabilities',
-                    'changetonetincome',
-                    'changetooperatingactivities',
-                    'commonstock',
-                    'currentratio',
-                    'debtequity',
-                    'deferredlongtermassetcharges',
-                    'deferredlongtermliab',
-                    'depreciation',
-                    'dividendspaid',
-                    'earnings',
-                    'effectofexchangerate',
-                    'equityasset',
-                    'equitymultipl',
-                    'fcf',
-                    'fcfmargin',
-                    'financialleverage',
-                    'goodwill',
-                    'goodwillassets',
-                    'intangibleassets',
-                    'inventory',
-                    'investments',
-                    'issuanceofstock',
-                    'longtermdebt',
-                    'longterminvestments',
-                    'minorityinterest',
-                    'netborrowings',
-                    'netincome',
-                    'netmargin',
-                    'netreceivables',
-                    'nettangibleassets',
-                    'operatingmargin',
-                    'otherassets',
-                    'othercashflowsfromfinancingactivities',
-                    'othercashflowsfrominvestingactivities',
-                    'othercurrentassets',
-                    'othercurrentliab',
-                    'otherliab',
-                    'otherstockholderequity',
-                    'propertyplantequipment',
-                    'receivablessales',
-                    'repurchaseofstock',
-                    'retainedearnings',
-                    'revenue',
-                    'roa',
-                    'roe',
-                    'roic',
-                    'shortlongtermdebt',
-                    'shortterminvestments',
-                    'ticker',
-                    'totalassets',
-                    'totalcashflowsfrominvestingactivities',
-                    'totalcashfromfinancingactivities',
-                    'totalcashfromoperatingactivities',
-                    'totalcurrentassets',
-                    'totalcurrentliabilities',
-                    'totalliab',
-                    'totalstockholderequity',
-                    'treasurystock']
+        if income.columns.nunique() < 4:
+            raise KeyError
         
-        empty = pd.DataFrame(columns=columns, index=combo.index)
-                
-        combo_merged = empty.merge(combo, how='right').set_index(empty.index)
-        
-        combo_merged = combo_merged.fillna(0).astype('int')
-        
-        return reduce_memory_usage(combo_merged)
+        else:
+            
+            #combine in one df
+            frames = [cashflow, balance, income]
+            combo = pd.concat(frames).T
+            combo.columns = [x.replace(' ','').lower() for x in list(combo.columns)]
+                    
+            #add with total possible columns
+            columns = ['accountspayable',
+                        'assetturnover',
+                        'capitalexpenditures',
+                        'capitalsurplus',
+                        'cash',
+                        'cashdebt',
+                        'cashflow',
+                        'changeincash',
+                        'changetoaccountreceivables',
+                        'changetoinventory',
+                        'changetoliabilities',
+                        'changetonetincome',
+                        'changetooperatingactivities',
+                        'commonstock',
+                        'currentratio',
+                        'debtequity',
+                        'deferredlongtermassetcharges',
+                        'deferredlongtermliab',
+                        'depreciation',
+                        'dividendspaid',
+                        'earnings',
+                        'effectofexchangerate',
+                        'equityasset',
+                        'equitymultipl',
+                        'fcf',
+                        'fcfmargin',
+                        'financialleverage',
+                        'goodwill',
+                        'goodwillassets',
+                        'intangibleassets',
+                        'inventory',
+                        'investments',
+                        'issuanceofstock',
+                        'longtermdebt',
+                        'longterminvestments',
+                        'minorityinterest',
+                        'netborrowings',
+                        'netincome',
+                        'netmargin',
+                        'netreceivables',
+                        'nettangibleassets',
+                        'operatingmargin',
+                        'otherassets',
+                        'othercashflowsfromfinancingactivities',
+                        'othercashflowsfrominvestingactivities',
+                        'othercurrentassets',
+                        'othercurrentliab',
+                        'otherliab',
+                        'otherstockholderequity',
+                        'propertyplantequipment',
+                        'receivablessales',
+                        'repurchaseofstock',
+                        'retainedearnings',
+                        'revenue',
+                        'roa',
+                        'roe',
+                        'roic',
+                        'shortlongtermdebt',
+                        'shortterminvestments',
+                        'ticker',
+                        'totalassets',
+                        'totalcashflowsfrominvestingactivities',
+                        'totalcashfromfinancingactivities',
+                        'totalcashfromoperatingactivities',
+                        'totalcurrentassets',
+                        'totalcurrentliabilities',
+                        'totalliab',
+                        'totalstockholderequity',
+                        'treasurystock']
+            
+            empty = pd.DataFrame(columns=columns, index=combo.index)
+                    
+            combo_merged = empty.merge(combo, how='right').set_index(empty.index)
+            
+            combo_merged = combo_merged.fillna(0).astype('int')
+            
+            return reduce_memory_usage(combo_merged)
     
     def get_preprocess(self):
         """preprocess data"""

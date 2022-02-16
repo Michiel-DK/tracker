@@ -101,7 +101,7 @@ if __name__ == '__main__':
     #third = round(len(tickers)/3)
     # get weekly from APPN (118) - 300
     #check 1600-1800
-    select = tickers[-800:-600]
+    select = tickers[-1400:-783]
     print(select)
     for ticker in select:
         full = Yahoo(ticker, timing='q')
