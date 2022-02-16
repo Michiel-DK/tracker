@@ -84,6 +84,7 @@ def get_scanner_q():
     q_health = pd.DataFrame(health, columns=colnames).drop(columns='index')
     #get weekly
     cur = conn.cursor()
+    cur.execute('''SELECT * from weekly_info''')
     weekly = cur.fetchall()
     colnames = [desc[0] for desc in cur.description]
     cur.close();
@@ -96,8 +97,8 @@ def get_scanner_q():
             np.mean([np.round(np.mean(q_moat[q_moat['ticker']==i]['moatpercentage']),2),np.round(np.mean(q_health[q_health['ticker']==i]['percentage']),2)])])
     check_2021_q = pd.DataFrame(ls, columns=['ticker', 'moat', 'health', 'avg'])
     check_2021_q.sort_values('avg', ascending=False, inplace=True)
-    full = check_2021_q[check_2021_q['avg']>1].merge(weekly, on='ticker', how='left').sort_values(by='avg', ascending=False)
-    return full
+    full = check_2021_q.merge(weekly, on='ticker', how='inner').sort_values(by='avg', ascending=False)
+    return full.drop_duplicates()
 
 def get_scanner_y():
     # get moat
@@ -124,10 +125,10 @@ def get_scanner_y():
     weekly = weekly[['ticker','totalcashpershare', 'enterprisetorevenue', 'enterprisetoebitda', 'beta','longname','sector', 'industry', 'market', 'country']]
     #combine
     ls = []
-    for i in q_moat[q_moat['year']=='2021']['ticker']:
+    for i in q_moat[q_moat['year']==2021]['ticker']:
         ls.append([i, np.round(np.mean(q_moat[q_moat['ticker']==i]['moatpercentage']),2) , np.round(np.mean(q_health[q_health['ticker']==i]['percentage']),2), \
             np.mean([np.round(np.mean(q_moat[q_moat['ticker']==i]['moatpercentage']),2),np.round(np.mean(q_health[q_health['ticker']==i]['percentage']),2)])])
     check_2021_q = pd.DataFrame(ls, columns=['ticker', 'moat', 'health', 'avg'])
     check_2021_q.sort_values('avg', ascending=False, inplace=True)
-    full = check_2021_q[check_2021_q['avg']>1].merge(weekly, on='ticker', how='left').sort_values(by='avg', ascending=False)
+    full = check_2021_q.merge(weekly, on='ticker', how='inner').sort_values(by='avg', ascending=False)
     return full
