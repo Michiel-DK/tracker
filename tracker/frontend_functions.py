@@ -3,7 +3,7 @@ from tracker.postgres import connect, config
 import pandas as pd
 import numpy as np
 
-params = config(filename='/Users/admin/code/Michiel-DK/tracker/database.ini', section='postgresql')
+params = config(filename='/Users/michieldekoninck/code/Michiel-DK/tracker/database.ini', section='postgresql')
 
 conn = psycopg2.connect(**params)
 
@@ -55,6 +55,7 @@ def get_yearly_health(ticker):
 def get_weekly(ticker):
     cur = conn.cursor()
     cur.execute(f"""SELECT * from weekly_info WHERE ticker = '{ticker}'""")
+    #cur.execute(f"""SELECT * from weekly_info WHERE (weekly_info.ticker = '{ticker}' AND (weekly_info.date = (SELECT MAX(weekly_info.date) FROM weekly_info))) GROUP BY weekly_info.date""")
     weekly = cur.fetchall()
     cur.close();
     colnames = [desc[0] for desc in cur.description]
