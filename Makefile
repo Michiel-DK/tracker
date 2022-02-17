@@ -60,7 +60,8 @@ pypi:
 #      CUSTOM HEROKU
 # ----------------------------------
 
-LOCAL_DUMP='https://www.dropbox.com/s/6cmn7kplrito4uc/tracker.dump?dl=0'
-
 heroku_backup:
-	@heroku pg:backups:restore ${LOCAL_DUMP} DATABASE_URL -a stoml
+	@heroku pg:backups:restore ${LOCAL_DUMP} DATABASE_URL --app stoml --confirm stoml
+
+heroku_push:
+	@heroku pg:push iex DATABASE_URL --app stoml

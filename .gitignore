@@ -8,5 +8,3 @@ raw_data/
 .env
 database.ini
 *.ipynb
-*.dump
-*Makefile
