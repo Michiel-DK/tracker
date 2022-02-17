@@ -53,3 +53,15 @@ pypi_test:
 
 pypi:
 	@twine upload dist/* -u $(PYPI_USERNAME)
+
+
+
+# ----------------------------------
+#      CUSTOM HEROKU
+# ----------------------------------
+
+heroku_backup:
+	@heroku pg:backups:restore ${LOCAL_DUMP} DATABASE_URL --app stoml --confirm stoml
+
+heroku_push:
+	@heroku pg:push iex DATABASE_URL --app stoml

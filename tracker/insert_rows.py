@@ -101,7 +101,8 @@ if __name__ == '__main__':
     #third = round(len(tickers)/3)
     # get weekly from APPN (118) - 300
     #check 1600-1800
-    select = tickers[-1400:-783]
+    tickers = [x.strip(' ') for x in tickers]
+    select = tickers[600:]
     print(select)
     for ticker in select:
         full = Yahoo(ticker, timing='q')
@@ -126,9 +127,6 @@ if __name__ == '__main__':
                 not_found_q.append(ticker)
                 pass
 
-    start = time.time()
-    print("y")
-    for ticker in select:
         full = Yahoo(ticker)
         try:
             individ = time.time()
@@ -150,11 +148,7 @@ if __name__ == '__main__':
                 print(f'Key error for y {ticker}')
                 not_found_y.append(ticker)
                 pass
-    
-    print("i")
-    start = time.time()
-    for ticker in select:
-        full = Yahoo(ticker)
+
         try:
             individ = time.time()
             info = full.get_info()
@@ -170,6 +164,7 @@ if __name__ == '__main__':
                 print(f'Key error for i {ticker}')
                 not_found_i.append(ticker)
                 pass
+            
     end = time.time()-start
     print(f"total run-time info: {end/60} min")
     print(f"total time q {sum(time_q)/60}, avg time q {np.mean(time_q)}")
