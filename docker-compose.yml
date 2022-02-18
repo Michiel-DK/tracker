@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+
+  db:
+      container_name: pg_container
+      image: postgres
+      restart: always
+      env_file:
+        - database.env
+      ports:
+        - "54321:5432"
+      volumes:
+        - /Users/michieldekoninck/code/Michiel-DK/tracker/database_dump/tracker.dump:/infile
+        - pg_data:/var/lib/postgresql/data/
+
+volumes:
+  pg_data:
