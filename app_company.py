@@ -1,23 +1,14 @@
 import streamlit as st
-from tracker.postgres import connect, config
-import psycopg2
 import pandas as pd
 from tracker.frontend_functions import *
 
-params = config(filename='/Users/michieldekoninck/code/Michiel-DK/tracker/database.ini', section='postgresql')
-
-conn = psycopg2.connect(**params)
 		
 # create a cursor for tickers
-cur = conn.cursor()
-cur.execute('''SELECT shortname, ticker from weekly_info''')
-all_tickers = cur.fetchall()
-cur.close();
 
 def app():
     option = st.selectbox(
         'Ticker or name?',
-        all_tickers)
+        get_all_tickers())
 
     col1, col2, col3, col4 = st.columns([1,1,1,1])
 

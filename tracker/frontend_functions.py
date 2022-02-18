@@ -16,6 +16,15 @@ database_env = dotenv_values("database.env")
 engine = create_engine(f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}")
 Session = sessionmaker(bind=engine)
 
+def get_all_tickers():
+    session = Session()
+    query = text(f"SELECT shortname, ticker from weekly_info ORDER BY ticker")
+    all_ticks = session.execute(query).fetchall()
+    #colnames = session.execute(query).keys()
+    session.close()
+    return all_ticks
+    
+
 def get_quarterly_moat(ticker):
     #cur = conn.cursor()
     #cur.execute(f"""SELECT * from quarterly_moat WHERE ticker = '{ticker}'""")
