@@ -24,17 +24,18 @@ def app():
     if option:
         
         weekly = get_weekly(option[0])
-        st.header(weekly[0].to_dict('records')[0]['longname'])
+        weekly_comp = weekly[0]
+        name = weekly_comp['industry'][0]
+        st.header(weekly_comp.to_dict('records')[0]['longname'])
         if (i and option):
-            weekly_comp = weekly[0]
+            #weekly_comp = weekly[0]
             #st.header(weekly.to_dict('records')[0]['longname'])
             st.table(weekly_comp[['sector', 'industry', 'market', 'marketcap', 'enterprisevalue']])
             st.write(weekly_comp.to_dict('records')[0]['longbusinesssummary'])
-            st.table(get_industry_avg(weekly_comp['industry'][0]))
             
         if (c and option):
             weekly_value = weekly[1]
-            st.table(weekly[1].T)
+            st.table((weekly[1].T).join(get_avg_weekly_industry(name), how='left'))
             st.table(weekly[2].T)
             st.table(weekly[3].T)
             st.table(weekly[4])

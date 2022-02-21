@@ -94,16 +94,33 @@ def get_weekly(ticker):
     company_recom = weekly_info[['targetmedianprice', 'targetmeanprice', 'targetlowprice', 'targethighprice', 'regularmarketprice', 'recommendationkey', 'recommendationmean']]
     return company_info, company_value, company_div, company_momentum, company_recom
 
-def get_industry_avg(industry):
+def get_all_companies_industry(industry):
     session = Session()
-    query = text("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'weekly_info' AND DATA_TYPE='real'")
+    query = text(f"SELECT ticker FROM weekly_info WHERE industry='{industry}'")
+    all_comp = session.execute(query).fetchall()
+    session.close()
+    return [x[0] for x in all_comp]
+
+def get_quarterly_moat_industry(industry):
+    tickers = get_all_companies_industry(industry)
+    session = Session()
+    query = text(f"SELECT year, AVG(moatpercentage)/COUNT(moatpercentage) FROM quarterly_moat WHERE ticker in {tuple(tickers)} GROUP BY year")
+    all_comp = session.execute(query).fetchall()
+    return all_comp
+    
+
+def get_avg_weekly_industry(industry):
+    session = Session()
+    query = text("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'quarterly_moat' AND DATA_TYPE='real'")
     weekly = session.execute(query).fetchall()
     ls = [f"AVG({x[0]}) AS {x[0]}"  for x in weekly]
     query2 = text(f"SELECT industry, {', '.join(ls)} FROM weekly_info WHERE industry='{industry}' GROUP BY industry")
     weekly = session.execute(query2).fetchall()
     colnames = session.execute(query2).keys()
-    df = pd.DataFrame(weekly, columns=colnames)
+    session.close()
+    df = pd.DataFrame(weekly, columns=colnames, index=['industry average']).T
     return df
+
 
 
 def get_scanner_q():
