@@ -22,7 +22,8 @@ def app():
         y = st.button('Yearly')
 
     if option:
-        weekly = get_weekly(option[1])
+        
+        weekly = get_weekly(option[0])
         st.header(weekly[0].to_dict('records')[0]['longname'])
         if (i and option):
             weekly_comp = weekly[0]
@@ -39,16 +40,16 @@ def app():
             
         if (q and option):
             st.header("Quarterly Moat")
-            st.table(get_quarterly_moat(option[1]))
+            st.table(get_quarterly_moat(option[0]))
             
             st.header("Quarterly Health")
-            st.table(get_quarterly_health(option[1]))
+            st.table(get_quarterly_health(option[0]))
             
         if (y and option):
             st.header("Yearly Moat")
-            st.table(get_yearly_moat(option[1]))
+            st.table(get_yearly_moat(option[0]))
             
             st.header("Yearly Health")
-            st.table(get_yearly_health(option[1]))
+            st.table(get_yearly_health(option[0]))
     
     

@@ -1,5 +1,4 @@
 import psycopg2
-from yfinance import Tickers
 from tracker.postgres import connect, config
 from tracker.tickers import get_tickers
 import numpy as np

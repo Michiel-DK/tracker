@@ -18,11 +18,11 @@ Session = sessionmaker(bind=engine)
 
 def get_all_tickers():
     session = Session()
-    query = text(f"SELECT shortname, ticker from weekly_info ORDER BY ticker")
+    query = text("SELECT DISTINCT ON (ticker) date, ticker, shortname FROM weekly_info ORDER BY ticker, date desc")
     all_ticks = session.execute(query).fetchall()
     #colnames = session.execute(query).keys()
     session.close()
-    return all_ticks
+    return [x[1:] for x in all_ticks]
     
 
 def get_quarterly_moat(ticker):
@@ -39,6 +39,7 @@ def get_quarterly_moat(ticker):
     selected_moat_df = pd.DataFrame(selected_moat, columns=colnames).drop(columns='index')
     selected_moat_df.index = selected_moat_df['year']
     selected_moat_df.drop(columns = ['year', 'ticker', 'key'], inplace=True)
+    selected_moat_df.replace(np.inf, np.nan, inplace=True)
     return selected_moat_df
 
 def get_quarterly_health(ticker):
@@ -50,6 +51,7 @@ def get_quarterly_health(ticker):
     selected_health_df = pd.DataFrame(selected_health, columns=colnames).drop(columns='index')
     selected_health_df.index = selected_health_df['year']
     selected_health_df.drop(columns = ['year', 'ticker', 'key'], inplace=True)
+    selected_health_df.replace(np.inf, np.nan, inplace=True)
     return selected_health_df
 
 
@@ -62,6 +64,7 @@ def get_yearly_moat(ticker):
     selected_moat_df = pd.DataFrame(selected_moat, columns=colnames).drop(columns='index')
     selected_moat_df.index = selected_moat_df['year']
     selected_moat_df.drop(columns = ['year', 'ticker', 'key'], inplace=True)
+    selected_moat_df.replace(np.inf, np.nan, inplace=True)
     return selected_moat_df
 
 def get_yearly_health(ticker):
@@ -73,11 +76,12 @@ def get_yearly_health(ticker):
     selected_health_df = pd.DataFrame(selected_health, columns=colnames).drop(columns='index')
     selected_health_df.index = selected_health_df['year']
     selected_health_df.drop(columns = ['year', 'ticker', 'key'], inplace=True)
+    selected_health_df.replace(np.inf, np.nan, inplace=True)
     return selected_health_df
 
 def get_weekly(ticker):
     session = Session()
-    query = text(f"SELECT * from weekly_info WHERE ticker = '{ticker}'")
+    query = text(f"SELECT DISTINCT on (ticker) * from weekly_info WHERE ticker = '{ticker}' ORDER BY ticker, date desc")
     weekly = session.execute(query).fetchall()
     colnames = session.execute(query).keys()
     session.close()
@@ -98,6 +102,7 @@ def get_scanner_q():
     colnames = session.execute(query).keys()
     session.close()
     q_moat = pd.DataFrame(moat, columns=colnames).drop(columns='index')
+    q_moat.replace(np.inf, np.nan, inplace=True)
     #get health
     session = Session()
     query = text(f"SELECT * from quarterly_health")
@@ -105,9 +110,10 @@ def get_scanner_q():
     colnames = session.execute(query).keys()
     session.close()
     q_health = pd.DataFrame(health, columns=colnames).drop(columns='index')
+    q_health.replace(np.inf, np.nan, inplace=True)
     #get weekly
     session = Session()
-    query = text(f"SELECT * from weekly_info")
+    query = text("SELECT DISTINCT ON (ticker) * FROM weekly_info ORDER BY ticker, date desc")
     weekly = session.execute(query).fetchall()
     colnames = session.execute(query).keys()
     session.close()
@@ -131,6 +137,7 @@ def get_scanner_y():
     colnames = session.execute(query).keys()
     session.close()
     q_moat = pd.DataFrame(moat, columns=colnames).drop(columns='index')
+    q_moat.replace(np.inf, np.nan, inplace=True)
     #get health
     session = Session()
     query = text(f"SELECT * from yearly_health")
@@ -138,9 +145,10 @@ def get_scanner_y():
     colnames = session.execute(query).keys()
     session.close()
     q_health = pd.DataFrame(health, columns=colnames).drop(columns='index')
+    q_health.replace(np.inf, np.nan, inplace=True)
     #get weekly
     session = Session()
-    query = text(f"SELECT * from weekly_info")
+    query = text("SELECT DISTINCT ON (ticker) * FROM weekly_info ORDER BY ticker, date desc")
     weekly = session.execute(query).fetchall()
     colnames = session.execute(query).keys()
     session.close()
