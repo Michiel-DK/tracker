@@ -94,6 +94,18 @@ def get_weekly(ticker):
     company_recom = weekly_info[['targetmedianprice', 'targetmeanprice', 'targetlowprice', 'targethighprice', 'regularmarketprice', 'recommendationkey', 'recommendationmean']]
     return company_info, company_value, company_div, company_momentum, company_recom
 
+def get_industry_avg(industry):
+    session = Session()
+    query = text("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'weekly_info' AND DATA_TYPE='real'")
+    weekly = session.execute(query).fetchall()
+    ls = [f"AVG({x[0]}) AS {x[0]}"  for x in weekly]
+    query2 = text(f"SELECT industry, {', '.join(ls)} FROM weekly_info WHERE industry='{industry}' GROUP BY industry")
+    weekly = session.execute(query2).fetchall()
+    colnames = session.execute(query2).keys()
+    df = pd.DataFrame(weekly, columns=colnames)
+    return df
+
+
 def get_scanner_q():
     # get moat
     session = Session()

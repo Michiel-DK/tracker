@@ -30,6 +30,7 @@ def app():
             #st.header(weekly.to_dict('records')[0]['longname'])
             st.table(weekly_comp[['sector', 'industry', 'market', 'marketcap', 'enterprisevalue']])
             st.write(weekly_comp.to_dict('records')[0]['longbusinesssummary'])
+            st.table(get_industry_avg(weekly_comp['industry'][0]))
             
         if (c and option):
             weekly_value = weekly[1]
@@ -51,5 +52,6 @@ def app():
             
             st.header("Yearly Health")
             st.table(get_yearly_health(option[0]))
+            
     
     
