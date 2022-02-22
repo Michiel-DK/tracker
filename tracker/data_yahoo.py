@@ -402,9 +402,9 @@ class Yahoo:
                 
         financials['equityasset'] = financials['totalstockholderequity'] / financials['totalassets']
         try:
-            financials['debtequity'] = financials['longtermdebt'] / financials['totalstockholderequity']
+            financials['debtequity'] = (financials['longtermdebt'] + financials['shortlongtermdebt']) / financials['totalstockholderequity']
         except KeyError:
-            financials['debtequity'] = financials['shortlongtermdebt'] / financials['totalstockholderequity']
+            financials['debtequity'] = np.nan
             
         financials['financialleverage'] =  financials['totalassets'] / financials['totalstockholderequity']
         financials['currentratio'] = financials['totalcurrentassets'] / financials['totalcurrentliabilities']

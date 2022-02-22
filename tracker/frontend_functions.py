@@ -111,14 +111,14 @@ def get_quarterly_moat_industry(industry):
 
 def get_avg_weekly_industry(industry):
     session = Session()
-    query = text("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'quarterly_moat' AND DATA_TYPE='real'")
+    query = text("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'weekly_info' AND DATA_TYPE='real'")
     weekly = session.execute(query).fetchall()
     ls = [f"AVG({x[0]}) AS {x[0]}"  for x in weekly]
     query2 = text(f"SELECT industry, {', '.join(ls)} FROM weekly_info WHERE industry='{industry}' GROUP BY industry")
     weekly = session.execute(query2).fetchall()
     colnames = session.execute(query2).keys()
     session.close()
-    df = pd.DataFrame(weekly, columns=colnames, index=['industry average']).T
+    df = pd.DataFrame(weekly, columns=colnames, index=[f'{industry} average']).T
     return df
 
 
