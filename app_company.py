@@ -42,7 +42,7 @@ def app():
             
         if (q and option):
             st.header("Quarterly Moat")
-            st.table(get_quarterly_moat(option[0]))
+            st.table(get_quarterly_moat(option[0]).join(get_quarterly_moat_industry(name), how='left'))
             
             st.header("Quarterly Health")
             st.table(get_quarterly_health(option[0]))

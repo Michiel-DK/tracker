@@ -24,6 +24,15 @@ def get_all_tickers():
     session.close()
     return [x[1:] for x in all_ticks]
     
+    
+def get_all_text():
+    session = Session()
+    query = text("SELECT ticker, longname, longbusinesssummary FROM weekly_info")
+    data = session.execute(query).fetchall()
+    colnames = session.execute(query).keys()
+    df = pd.DataFrame(data, columns=colnames)
+    session.close()
+    return df
 
 def get_quarterly_moat(ticker):
     #cur = conn.cursor()
@@ -106,9 +115,10 @@ def get_quarterly_moat_industry(industry):
     session = Session()
     query = text(f"SELECT year, AVG(moatpercentage)/COUNT(moatpercentage) FROM quarterly_moat WHERE ticker in {tuple(tickers)} GROUP BY year")
     all_comp = session.execute(query).fetchall()
-    return all_comp
+    colnames = session.execute(query).keys()
+    all_comp_df = pd.DataFrame(all_comp, columns=colnames).set_index('year').rename(columns={'?column?':f'{industry} average'})
+    return all_comp_df
     
-
 def get_avg_weekly_industry(industry):
     session = Session()
     query = text("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'weekly_info' AND DATA_TYPE='real'")
