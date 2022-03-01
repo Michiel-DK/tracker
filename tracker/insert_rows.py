@@ -9,14 +9,20 @@ import sys
 import pandas as pd
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
-
-
+from random import sample
+import os
 from dotenv import dotenv_values
 
-database_env = dotenv_values("database.env")
-
+    
+#root_dir = os.path.dirname(__file__)
+#env_path = os.path.join(root_dir, "database.env")
+#print(env_path)
+database_env = dotenv_values("/Users/michieldekoninck/code/Michiel-DK/tracker/database.env")
 
 engine = create_engine(f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}")
+
+#engine = create_engine("postgresql://postgres:abc123@localhost:54321/tracker")
+
 
 def copy_from_stringio(df, table):
     """
@@ -128,14 +134,17 @@ if __name__ == '__main__':
     not_found_i = []
     time_i = []
     #tickers = get_tickers()
-    #tickers = list(pd.read_csv('data/euronext.csv', sep=';')['yahoo'])
-    tickers = ['PYPL', 'ADBE', 'AY', 'BABA', 'CRM', 'CRSP', 'CVS', 'GOOGL', 'HASI', 'MSFT', 'PLTR', 'SHELL', 'SQ', 'TCPC', 'TDO', 'TER', 'TROW', 'TSLX', 'TTE', 'V']
+    root_dir = os.path.dirname(__file__)
+    csv_path = os.path.join(root_dir, "data", "euronext.csv")
+    tickers = list(pd.read_csv(csv_path, sep=';')['yahoo'])
+    #tickers = ['PYPL', 'ADBE', 'AY', 'BABA', 'CRM', 'CRSP', 'CVS', 'GOOGL', 'HASI', 'MSFT', 'PLTR', 'SHELL', 'SQ', 'TCPC', 'TDO', 'TER', 'TROW', 'TSLX', 'TTE', 'V']
     #third = round(len(tickers)/3)
     # get weekly from APPN (118) - 300
     #check 1600-1800
     tickers = [x.strip(' ') for x in tickers]
     #select = tickers[:10]
     #print(select)
+    tickers = sample(tickers, 1)
     for ticker in tickers:
         full = Yahoo(ticker, timing='q')
         try:
