@@ -144,6 +144,7 @@ if __name__ == '__main__':
     tickers = [x.strip(' ') for x in tickers]
     #select = tickers[:10]
     #print(select)
+    tickers = ['DOCN']
     tickers = sample(tickers, 1)
     for ticker in tickers:
         full = Yahoo(ticker, timing='q')
