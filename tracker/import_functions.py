@@ -3,6 +3,7 @@ from tracker.insert_rows import copy_from_stringio
 
 
 def quarterly_import(tickers):
+    tickers = [x.strip(' ') for x in tickers]
     for ticker in tickers:
         full = Yahoo(ticker, timing='q')
         try:
@@ -22,6 +23,7 @@ def quarterly_import(tickers):
                 pass
 
 def yearly_import(tickers):
+    tickers = [x.strip(' ') for x in tickers]
     for ticker in tickers:
         full = Yahoo(ticker)
         try:
@@ -41,6 +43,7 @@ def yearly_import(tickers):
                 pass
             
 def weekly_import(tickers):
+    tickers = [x.strip(' ') for x in tickers]
     for ticker in tickers:
         full = Yahoo(ticker)
         try:
