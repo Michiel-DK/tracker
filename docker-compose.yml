@@ -14,5 +14,15 @@ services:
         - /Users/michieldekoninck/code/Michiel-DK/tracker/database_dump/tracker.dump:/infile
         - pg_data:/var/lib/postgresql/data/
 
+  api:
+    container_name: api_container
+    build: .
+    volumes:
+      - .:/api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
 volumes:
   pg_data:
