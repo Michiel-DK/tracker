@@ -1,3 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import runpy
+import os
+
+root_dir = os.path.dirname(os.path.dirname(__file__))
+python_path = os.path.join(root_dir, "tracker", 'insert_rows.py')
+runpy.run_path(path_name=python_path, run_name='__main__')

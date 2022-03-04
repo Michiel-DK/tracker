@@ -1,5 +1,4 @@
 import psycopg2
-from yfinance import Tickers
 from tracker.postgres import connect, config
 from tracker.tickers import get_tickers
 import numpy as np
@@ -8,6 +7,21 @@ from io import StringIO
 import time
 import sys
 import pandas as pd
+from sqlalchemy import create_engine, text
+from sqlalchemy.orm import sessionmaker
+from random import sample
+import os
+from dotenv import dotenv_values
+
+    
+#root_dir = os.path.dirname(__file__)
+#env_path = os.path.join(root_dir, "database.env")
+#print(env_path)
+database_env = dotenv_values("/Users/michieldekoninck/code/Michiel-DK/tracker/database.env")
+
+engine = create_engine(f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}")
+
+#engine = create_engine("postgresql://postgres:abc123@localhost:54321/tracker")
 
 
 def copy_from_stringio(df, table):
@@ -19,10 +33,7 @@ def copy_from_stringio(df, table):
     buffer = StringIO()
     df.to_csv(buffer, index_label='id', header=False, sep=";")
     buffer.seek(0)
-    # read database configuration
-    params = config()
-    # connect to the PostgreSQL database
-    conn = psycopg2.connect(**params)
+    conn = engine.raw_connection()
     # create a new cursor    
     cursor = conn.cursor()
     try:
@@ -34,6 +45,32 @@ def copy_from_stringio(df, table):
         cursor.close()
         return 1
     cursor.close()
+
+
+# def copy_from_stringio(df, table):
+#     """
+#     Here we are going save the dataframe in memory 
+#     and use copy_from() to copy it to the table
+#     """
+#     # save dataframe to an in memory buffer
+#     buffer = StringIO()
+#     df.to_csv(buffer, index_label='id', header=False, sep=";")
+#     buffer.seek(0)
+#     # read database configuration
+#     params = config()
+#     # connect to the PostgreSQL database
+#     conn = psycopg2.connect(**params)
+#     # create a new cursor    
+#     cursor = conn.cursor()
+#     try:
+#         cursor.copy_from(buffer, table, sep=";", null='')
+#         conn.commit()
+#     except (Exception, psycopg2.DatabaseError) as error:
+#         print("Error: %s" % error)
+#         conn.rollback()
+#         cursor.close()
+#         return 1
+#     cursor.close()
 
 # def insert_one(row):
 #     """ insert a new vendor into the vendors table """
@@ -97,14 +134,18 @@ if __name__ == '__main__':
     not_found_i = []
     time_i = []
     #tickers = get_tickers()
-    tickers = list(pd.read_csv('tracker/data/extra_ls.csv')['0'])
+    root_dir = os.path.dirname(__file__)
+    csv_path = os.path.join(root_dir, "data", "euronext.csv")
+    tickers = list(pd.read_csv(csv_path, sep=';')['yahoo'])
+    #tickers = ['PYPL', 'ADBE', 'AY', 'BABA', 'CRM', 'CRSP', 'CVS', 'GOOGL', 'HASI', 'MSFT', 'PLTR', 'SHELL', 'SQ', 'TCPC', 'TDO', 'TER', 'TROW', 'TSLX', 'TTE', 'V']
     #third = round(len(tickers)/3)
     # get weekly from APPN (118) - 300
     #check 1600-1800
     tickers = [x.strip(' ') for x in tickers]
-    select = tickers[600:]
-    print(select)
-    for ticker in select:
+    #select = tickers[:10]
+    #print(select)
+    tickers = sample(tickers, 30)
+    for ticker in tickers:
         full = Yahoo(ticker, timing='q')
         try:
             individ = time.time()

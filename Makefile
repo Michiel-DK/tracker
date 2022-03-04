@@ -65,3 +65,11 @@ heroku_backup:
 
 heroku_push:
 	@heroku pg:push iex DATABASE_URL --app stoml
+
+
+# ----------------------------------
+#      POSTGRES
+# ----------------------------------
+
+postgres_dump:
+	@pg_dump -U postgres -h localhost -p 54321 tracker > database_dump/tracker.dump

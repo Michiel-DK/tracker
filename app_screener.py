@@ -1,12 +1,6 @@
 import streamlit as st
-from tracker.postgres import connect, config
-import psycopg2
 import pandas as pd
 from tracker.frontend_functions import *
-
-params = config(filename='/Users/admin/code/Michiel-DK/tracker/database.ini', section='postgresql')
-
-conn = psycopg2.connect(**params)
 
 def app():
     col1, col2= st.columns([1,1])
