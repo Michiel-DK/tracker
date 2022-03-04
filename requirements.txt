@@ -245,7 +245,7 @@ tomli==1.2.3
 toolz==0.11.2
 tornado==6.1
 tqdm==4.63.0
--e git+git@github.com:Michiel-DK/tracker.git@7a95f337e70a69931740976d2c90e33c90b4f94c#egg=tracker
+-e https://github.com/Michiel-DK/tracker.gitt@7a95f337e70a69931740976d2c90e33c90b4f94c#egg=tracker
 traitlets==5.1.1
 typing-extensions==4.0.1
 tzdata==2021.5
