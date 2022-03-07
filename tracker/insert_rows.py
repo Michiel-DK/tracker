@@ -144,7 +144,7 @@ if __name__ == '__main__':
     tickers = [x.strip(' ') for x in tickers]
     #select = tickers[:10]
     #print(select)
-    tickers = sample(tickers, 800)
+    tickers = tickers[100:300]
     for ticker in tickers:
         full = Yahoo(ticker, timing='q')
         try:
