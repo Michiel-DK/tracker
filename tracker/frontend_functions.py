@@ -2,7 +2,8 @@ from tracker.postgres import connect, config
 import pandas as pd
 import numpy as np
 from sqlalchemy import create_engine, text
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 import dotenv
 import os
 
