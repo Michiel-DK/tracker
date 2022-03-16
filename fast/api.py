@@ -8,8 +8,8 @@ from typing import List
 
 from sqlalchemy.orm import Session
 
-from tracker import crud, models, schemas
-from tracker.database import SessionLocal, engine
+from tracker.db import crud, models, schemas
+from tracker.db.database import SessionLocal, engine
 from fastapi.middleware.cors import CORSMiddleware
     
     

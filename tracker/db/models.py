@@ -1,7 +1,7 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float
 from sqlalchemy.orm import relationship
 
-from tracker.database import Base
+from tracker.db.database import Base
 
 '''QUARTERLY models'''
 
