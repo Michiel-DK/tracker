@@ -19,10 +19,13 @@ services:
     build: .
     volumes:
       - .:/api
+    env_file:
+      - database.env
     ports:
       - "8000:8000"
     depends_on:
       - db
+    restart: on-failure
 
 volumes:
   pg_data:

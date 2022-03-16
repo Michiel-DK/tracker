@@ -2,18 +2,22 @@ from tracker.postgres import connect, config
 import pandas as pd
 import numpy as np
 from sqlalchemy import create_engine, text
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 import dotenv
+import os
 
 #params = config(filename='/Users/michieldekoninck/code/Michiel-DK/tracker/database.ini', section='postgresql')
 
 #conn = psycopg2.connect(**params)
 
-from dotenv import dotenv_values
+try:
+    from dotenv import dotenv_values
+    database_env = dotenv_values("database.env")
+    engine = create_engine(f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}")
+except KeyError:
+    engine = create_engine(f"postgresql://{os.environ['POSTGRES_USER']}:{os.environ['POSTGRES_PASSWORD']}@localhost:{os.environ['POSTGRES_PORT']}/{os.environ['POSTGRES_DB']}")
 
-database_env = dotenv_values("database.env")
-
-engine = create_engine(f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}")
 Session = sessionmaker(bind=engine)
 
 def get_all_tickers():
