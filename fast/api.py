@@ -32,11 +32,13 @@ def get_db():
         yield db
     finally:
         db.close()
-
+        
 @app.get("/weekly/", response_model=List[schemas.Weekly])
 def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     items = crud.get_weekly(db, skip=skip, limit=limit)
     return items
+        
+'''QUARTERLY ENDPOINTS'''
 
 @app.get("/moatq/{ticker}", response_model=List[schemas.Moatq])
 def read_items(ticker: str, db: Session = Depends(get_db)):
@@ -53,6 +55,32 @@ def read_items(ticker: str, db: Session = Depends(get_db)):
     items = crud.get_financialsq(db, ticker=ticker)
     return items
 
+@app.get("/growthq/{ticker}", response_model=List[schemas.Growthq])
+def read_items(ticker: str, db: Session = Depends(get_db)):
+    items = crud.get_growthq(db, ticker=ticker)
+    return items
+
+'''YEARLY ENDPOINTS'''
+
+@app.get("/moaty/{ticker}", response_model=List[schemas.Moaty])
+def read_items(ticker: str, db: Session = Depends(get_db)):
+    items = crud.get_moaty(db, ticker=ticker)
+    return items
+
+@app.get("/healthy/{ticker}", response_model=List[schemas.Healthy])
+def read_items(ticker: str, db: Session = Depends(get_db)):
+    items = crud.get_healthy(db, ticker=ticker)
+    return items
+
+@app.get("/get_financialsy/{ticker}", response_model=List[schemas.Financialsy])
+def read_items(ticker: str, db: Session = Depends(get_db)):
+    items = crud.get_financialsy(db, ticker=ticker)
+    return items
+
+@app.get("/growthy/{ticker}", response_model=List[schemas.Growthy])
+def read_items(ticker: str, db: Session = Depends(get_db)):
+    items = crud.get_growthy(db, ticker=ticker)
+    return items
 
 # @app.get("/weekly_info")
 # async def get_weekly(ticker):
