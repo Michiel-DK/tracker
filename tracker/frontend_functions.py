@@ -13,7 +13,7 @@ import os
 
 try:
     from dotenv import dotenv_values
-    database_env = dotenv_values("../database.env")
+    database_env = dotenv_values("database.env")
     engine = create_engine(f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}")
 except KeyError:
     engine = create_engine(f"postgresql://{os.environ['POSTGRES_USER']}:{os.environ['POSTGRES_PASSWORD']}@localhost:{os.environ['POSTGRES_PORT']}/{os.environ['POSTGRES_DB']}")

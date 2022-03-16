@@ -10,9 +10,20 @@ from sqlalchemy.orm import Session
 
 from tracker import crud, models, schemas
 from tracker.database import SessionLocal, engine
+from fastapi.middleware.cors import CORSMiddleware
+    
+    
     
 
 app = FastAPI()
+
+app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 # Dependency
 def get_db():
@@ -26,6 +37,22 @@ def get_db():
 def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     items = crud.get_weekly(db, skip=skip, limit=limit)
     return items
+
+@app.get("/moatq/{ticker}", response_model=List[schemas.Moatq])
+def read_items(ticker: str, db: Session = Depends(get_db)):
+    items = crud.get_moatq(db, ticker=ticker)
+    return items
+
+@app.get("/healthq/{ticker}", response_model=List[schemas.Healthq])
+def read_items(ticker: str, db: Session = Depends(get_db)):
+    items = crud.get_healthq(db, ticker=ticker)
+    return items
+
+@app.get("/get_financialsq/{ticker}", response_model=List[schemas.Financialsq])
+def read_items(ticker: str, db: Session = Depends(get_db)):
+    items = crud.get_financialsq(db, ticker=ticker)
+    return items
+
 
 # @app.get("/weekly_info")
 # async def get_weekly(ticker):

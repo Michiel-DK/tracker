@@ -134,17 +134,19 @@ if __name__ == '__main__':
     not_found_i = []
     time_i = []
     #tickers = get_tickers()
-    root_dir = os.path.dirname(__file__)
-    csv_path = os.path.join(root_dir, "data", "euronext.csv")
-    tickers = list(pd.read_csv(csv_path, sep=';')['yahoo'])
-    #tickers = ['PYPL', 'ADBE', 'AY', 'BABA', 'CRM', 'CRSP', 'CVS', 'GOOGL', 'HASI', 'MSFT', 'PLTR', 'SHELL', 'SQ', 'TCPC', 'TDO', 'TER', 'TROW', 'TSLX', 'TTE', 'V']
+    #root_dir = os.path.dirname(__file__)
+    #csv_path = os.path.join(root_dir, "data", "euronext.csv")
+    #tickers = list(pd.read_csv(csv_path, sep=';')['yahoo'])
+    #tickers = ['PYPL', 'ADBE', 'AY', 'BABA', 'CRM', 'CRSP', 'CVS', 'GOOGL', 'HASI', 'MSFT', 'PLTR', 'SHELL', 'SQ', 'TCPC', 'TDO', 'TER', 'TROW', 'TSLX', 'TTE', 'V', 'ALLY', 'FB', 'DDOG', 'FISV', 'MCO', 'MDB', 'SHOP', 'SNOW',\
+        #'ADDYY', 'TRI.PA', 'SU.PA', 'NXR.L', 'SHEL', 'TTE', 'HHFA.DE', 'DUKE.L', 'WEHB.BR', 'ASML', 'SONO', 'ACN', 'ENX.PA', 'MCO', 'EL', 'LOR.F']
+    tickers = ['SNOW','ADDYY']
     #third = round(len(tickers)/3)
     # get weekly from APPN (118) - 300
     #check 1600-1800
     tickers = [x.strip(' ') for x in tickers]
     #select = tickers[:10]
     #print(select)
-    tickers = tickers[100:300]
+    #tickers = tickers[100:300]
     for ticker in tickers:
         full = Yahoo(ticker, timing='q')
         try:

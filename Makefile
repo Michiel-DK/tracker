@@ -73,3 +73,10 @@ heroku_push:
 
 postgres_dump:
 	@pg_dump -U postgres -h localhost -p 54321 tracker > database_dump/tracker.dump
+
+# ----------------------------------
+#      API
+# ----------------------------------
+
+run_api:
+	uvicorn fast.api:app --reload  # load web server with code autoreload
