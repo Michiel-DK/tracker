@@ -9,18 +9,20 @@ services:
       env_file:
         - database.env
       ports:
-        - "54321:5432"
+        - "5432:5432"
       volumes:
         - /Users/michieldekoninck/code/Michiel-DK/tracker/database_dump/tracker.dump:/infile
         - pg_data:/var/lib/postgresql/data/
 
   api:
-    container_name: api_container
+    container_name: api_container_libq
     build: .
     volumes:
       - .:/api
     env_file:
       - database.env
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
     ports:
       - "8000:8000"
     depends_on:

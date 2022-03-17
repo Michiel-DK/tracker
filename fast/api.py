@@ -40,44 +40,44 @@ def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
         
 '''QUARTERLY ENDPOINTS'''
 
-@app.get("/moatq/{ticker}", response_model=List[schemas.Moatq])
+@app.get("/q_moat/{ticker}", response_model=List[schemas.Moatq])
 def read_items(ticker: str, db: Session = Depends(get_db)):
     items = crud.get_moatq(db, ticker=ticker)
     return items
 
-@app.get("/healthq/{ticker}", response_model=List[schemas.Healthq])
+@app.get("/q_health/{ticker}", response_model=List[schemas.Healthq])
 def read_items(ticker: str, db: Session = Depends(get_db)):
     items = crud.get_healthq(db, ticker=ticker)
     return items
 
-@app.get("/get_financialsq/{ticker}", response_model=List[schemas.Financialsq])
+@app.get("/q_financials/{ticker}", response_model=List[schemas.Financialsq])
 def read_items(ticker: str, db: Session = Depends(get_db)):
     items = crud.get_financialsq(db, ticker=ticker)
     return items
 
-@app.get("/growthq/{ticker}", response_model=List[schemas.Growthq])
+@app.get("/q_growth/{ticker}", response_model=List[schemas.Growthq])
 def read_items(ticker: str, db: Session = Depends(get_db)):
     items = crud.get_growthq(db, ticker=ticker)
     return items
 
 '''YEARLY ENDPOINTS'''
 
-@app.get("/moaty/{ticker}", response_model=List[schemas.Moaty])
+@app.get("/y_moat/{ticker}", response_model=List[schemas.Moaty])
 def read_items(ticker: str, db: Session = Depends(get_db)):
     items = crud.get_moaty(db, ticker=ticker)
     return items
 
-@app.get("/healthy/{ticker}", response_model=List[schemas.Healthy])
+@app.get("/y_health/{ticker}", response_model=List[schemas.Healthy])
 def read_items(ticker: str, db: Session = Depends(get_db)):
     items = crud.get_healthy(db, ticker=ticker)
     return items
 
-@app.get("/get_financialsy/{ticker}", response_model=List[schemas.Financialsy])
+@app.get("/y_financials/{ticker}", response_model=List[schemas.Financialsy])
 def read_items(ticker: str, db: Session = Depends(get_db)):
     items = crud.get_financialsy(db, ticker=ticker)
     return items
 
-@app.get("/growthy/{ticker}", response_model=List[schemas.Growthy])
+@app.get("/y_growth/{ticker}", response_model=List[schemas.Growthy])
 def read_items(ticker: str, db: Session = Depends(get_db)):
     items = crud.get_growthy(db, ticker=ticker)
     return items
