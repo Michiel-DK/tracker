@@ -79,4 +79,11 @@ postgres_dump:
 # ----------------------------------
 
 run_api:
-	uvicorn fast.api:app --reload  # load web server with code autoreload
+	@uvicorn fast.api:app --reload  # load web server with code autoreload
+
+# ----------------------------------
+#      STREAMLIT
+# ----------------------------------
+
+run_streamlit:
+	@streamlit run app.py 
