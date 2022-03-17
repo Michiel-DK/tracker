@@ -13,6 +13,7 @@ COPY requirements.txt /requirements.txt
 COPY setup.py /setup.py
 COPY scripts /scripts
 
+#upgrade libpq and install build tools, then build psycopg2-binary from source
 RUN apt update -y && apt install -y build-essential libpq-dev
 RUN pip install psycopg2-binary --no-binary psycopg2-binary
 

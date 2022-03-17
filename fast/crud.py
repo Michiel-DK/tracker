@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from tracker.db import models, schemas
+from . import models, schemas
 
 '''QUARTERLY CRUD'''
 
