@@ -16,7 +16,9 @@ services:
 
   api:
     container_name: api_container
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile_api
     volumes:
       - .:/api
     env_file:
