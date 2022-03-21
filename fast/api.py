@@ -33,9 +33,14 @@ def get_db():
     finally:
         db.close()
         
-@app.get("/weekly/", response_model=List[schemas.Weekly])
-def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    items = crud.get_weekly(db, skip=skip, limit=limit)
+# @app.get("/weekly/", response_model=List[schemas.Weekly])
+# def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+#     items = crud.get_weekly(db, skip=skip, limit=limit)
+#     return items
+
+@app.get("/weekly/{ticker}", response_model=List[schemas.Weekly])
+def read_items(ticker: str, db: Session = Depends(get_db)):
+    items = crud.get_weekly(db, ticker=ticker)
     return items
         
 '''QUARTERLY ENDPOINTS'''

@@ -4,8 +4,11 @@ from . import models, schemas
 
 '''QUARTERLY CRUD'''
 
-def get_weekly(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Weekly).offset(skip).limit(limit).all()
+# def get_weekly(db: Session, skip: int = 0, limit: int = 100):
+#     return db.query(models.Weekly).offset(skip).limit(limit).all()
+
+def get_weekly(db: Session, ticker:str):
+    return db.query(models.Weekly).filter(models.Weekly.ticker == ticker).all()
 
 def get_moatq(db: Session, ticker: str):
     return db.query(models.Moatq).filter(models.Moatq.ticker == ticker).all()

@@ -31,8 +31,6 @@ except KeyError:
     SQLALCHEMY_DATABASE_URL = f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}"
     engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
-#engine = create_engine("postgresql://postgres:abc123@localhost:54321/tracker")
-
 
 def copy_from_stringio(df, table):
     """
