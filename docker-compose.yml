@@ -31,5 +31,14 @@ services:
       - db
     restart: on-failure
 
+  cron:
+    container_name: tracker_package
+    build:
+      context: .
+      dockerfile: Dockerfile_yahoo
+    env_file:
+      - database.env
+
+
 volumes:
   pg_data:

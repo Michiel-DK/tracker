@@ -1,0 +1,15 @@
+# Pull base image
+FROM python:3.8.12-slim
+
+# Set environment varibles
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Install dependencies
+COPY tracker /tracker
+COPY requirements_tracker.txt /requirements_tracker.txt
+COPY crontab /etc/cron.d/crontab
+
+RUN apt-get update && apt-get -y install cron vim && chmod 0644 /etc/cron.d/crontab &&/usr/bin/crontab /etc/cron.d/crontab
+
+CMD ["cron", "-f"]

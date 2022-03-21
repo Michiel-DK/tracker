@@ -1,0 +1,2 @@
+#run python script every 5 minutes
+*/5 * * * * root /usr/local/bin/python /tracker/insert_rows.py >> /tracker/output.txt 2>&1
