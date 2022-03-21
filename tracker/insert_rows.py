@@ -1,3 +1,4 @@
+from venv import create
 import psycopg2
 from tracker.postgres import connect, config
 from tracker.tickers import get_tickers
@@ -17,11 +18,18 @@ from dotenv import dotenv_values
 #root_dir = os.path.dirname(__file__)
 #env_path = os.path.join(root_dir, "database.env")
 #print(env_path)
-database_env = dotenv_values("/Users/michieldekoninck/code/Michiel-DK/tracker/database.env")
+#database_env = dotenv_values("/Users/michieldekoninck/code/Michiel-DK/tracker/database.env")
 
-engine = create_engine(f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}")
+#engine = create_engine(f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}")
 
-#engine = create_engine("postgresql://postgres:abc123@localhost:54321/tracker")
+try:
+    SQLALCHEMY_DATABASE_URL = f"postgresql://{os.environ['POSTGRES_USER']}:{os.environ['POSTGRES_PASSWORD']}@{os.environ['POSTGRES_SERVER']}:{os.environ['POSTGRES_PORT']}/{os.environ['POSTGRES_DB']}"
+    print(SQLALCHEMY_DATABASE_URL)
+    engine = create_engine(SQLALCHEMY_DATABASE_URL)
+except KeyError:
+    database_env = dotenv_values("database.env")
+    SQLALCHEMY_DATABASE_URL = f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}"
+    engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 
 def copy_from_stringio(df, table):
@@ -134,19 +142,16 @@ if __name__ == '__main__':
     not_found_i = []
     time_i = []
     #tickers = get_tickers()
-    #root_dir = os.path.dirname(__file__)
-    #csv_path = os.path.join(root_dir, "data", "euronext.csv")
-    #tickers = list(pd.read_csv(csv_path, sep=';')['yahoo'])
+    root_dir = os.path.dirname(__file__)
+    csv_path = os.path.join(root_dir, "data", "euronext.csv")
+    tickers = list(pd.read_csv(csv_path, sep=';')['yahoo'])
     #tickers = ['PYPL', 'ADBE', 'AY', 'BABA', 'CRM', 'CRSP', 'CVS', 'GOOGL', 'HASI', 'MSFT', 'PLTR', 'SHELL', 'SQ', 'TCPC', 'TDO', 'TER', 'TROW', 'TSLX', 'TTE', 'V', 'ALLY', 'FB', 'DDOG', 'FISV', 'MCO', 'MDB', 'SHOP', 'SNOW',\
         #'ADDYY', 'TRI.PA', 'SU.PA', 'NXR.L', 'SHEL', 'TTE', 'HHFA.DE', 'DUKE.L', 'WEHB.BR', 'ASML', 'SONO', 'ACN', 'ENX.PA', 'MCO', 'EL', 'LOR.F']
-    tickers = ['SNOW','ADDYY']
     #third = round(len(tickers)/3)
     # get weekly from APPN (118) - 300
     #check 1600-1800
     tickers = [x.strip(' ') for x in tickers]
-    #select = tickers[:10]
-    #print(select)
-    #tickers = tickers[100:300]
+    tickers = sample(tickers, 2)
     for ticker in tickers:
         full = Yahoo(ticker, timing='q')
         try:

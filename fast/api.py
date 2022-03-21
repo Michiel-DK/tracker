@@ -1,15 +1,15 @@
 import uvicorn
-from fastapi import FastAPI, Depends, HTTPException
-from pydantic import BaseModel
+from fastapi import FastAPI, Depends #, HTTPException
+#from pydantic import BaseModel
 #from tracker.frontend_functions import *
-import asyncio
+#import asyncio
 
 from typing import List
 
 from sqlalchemy.orm import Session
 
-from tracker.db import crud, models, schemas
-from tracker.db.database import SessionLocal, engine
+from . import crud, models, schemas
+from .database import SessionLocal, engine
 from fastapi.middleware.cors import CORSMiddleware
     
     
@@ -33,9 +33,14 @@ def get_db():
     finally:
         db.close()
         
-@app.get("/weekly/", response_model=List[schemas.Weekly])
-def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    items = crud.get_weekly(db, skip=skip, limit=limit)
+# @app.get("/weekly/", response_model=List[schemas.Weekly])
+# def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+#     items = crud.get_weekly(db, skip=skip, limit=limit)
+#     return items
+
+@app.get("/weekly/{ticker}", response_model=List[schemas.Weekly])
+def read_items(ticker: str, db: Session = Depends(get_db)):
+    items = crud.get_weekly(db, ticker=ticker)
     return items
         
 '''QUARTERLY ENDPOINTS'''
@@ -88,5 +93,5 @@ def read_items(ticker: str, db: Session = Depends(get_db)):
 #     return company_info[0]["ticker"][0]
 
 
-# if __name__ == "__main__":
-#     uvicorn.run(app, host="0.0.0.0", port=8000)
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
