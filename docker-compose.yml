@@ -36,8 +36,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile_yahoo
-    env_file:
-      - database.env
+      env_file:
+        - database.env
 
 
 volumes:

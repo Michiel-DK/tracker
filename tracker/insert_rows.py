@@ -1,3 +1,4 @@
+from venv import create
 import psycopg2
 from tracker.postgres import connect, config
 from tracker.tickers import get_tickers
@@ -17,9 +18,18 @@ from dotenv import dotenv_values
 #root_dir = os.path.dirname(__file__)
 #env_path = os.path.join(root_dir, "database.env")
 #print(env_path)
-database_env = dotenv_values("/Users/michieldekoninck/code/Michiel-DK/tracker/database.env")
+#database_env = dotenv_values("/Users/michieldekoninck/code/Michiel-DK/tracker/database.env")
 
-engine = create_engine(f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}")
+#engine = create_engine(f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}")
+
+try:
+    SQLALCHEMY_DATABASE_URL = f"postgresql://{os.environ['POSTGRES_USER']}:{os.environ['POSTGRES_PASSWORD']}@{os.environ['POSTGRES_SERVER']}:{os.environ['POSTGRES_PORT']}/{os.environ['POSTGRES_DB']}"
+    print(SQLALCHEMY_DATABASE_URL)
+    engine = create_engine(SQLALCHEMY_DATABASE_URL)
+except KeyError:
+    database_env = dotenv_values("database.env")
+    SQLALCHEMY_DATABASE_URL = f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}"
+    engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 #engine = create_engine("postgresql://postgres:abc123@localhost:54321/tracker")
 

@@ -7,9 +7,12 @@ ENV PYTHONUNBUFFERED 1
 
 # Install dependencies
 COPY tracker /tracker
+COPY setup.py /setup.py
+COPY scripts /scripts
 COPY requirements_tracker.txt /requirements_tracker.txt
 COPY crontab /etc/cron.d/crontab
 
-RUN apt-get update && apt-get -y install cron vim && chmod 0644 /etc/cron.d/crontab &&/usr/bin/crontab /etc/cron.d/crontab
+RUN apt-get update && apt-get -y install libpq-dev gcc cron vim && chmod 0644 /etc/cron.d/crontab &&/usr/bin/crontab /etc/cron.d/crontab
+RUN pip install --upgrade pip wheel && pip install -r requirements_tracker.txt && pip install -e .
 
 CMD ["cron", "-f"]
