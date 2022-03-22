@@ -2,6 +2,14 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
+class PricesBase(BaseModel):
+    date: str
+    close: Optional[float] = None
+    ticker: str
+    key: str
+    
+class PricesCreate(PricesBase):
+    pass
 
 '''QUARTERLY Pydantic models / schemas '''
 #to have common attributes when reading or creating
@@ -144,6 +152,14 @@ class GrowthyBase(BaseModel):
     year: str
     ticker:str
     key: str
+    
+class Prices(PricesBase):
+    index: int
+    #owner_id: int
+
+    class Config:
+        #orm_mode will tell the Pydantic model to read the data even if it is not a dict, but an ORM model
+        orm_mode = True
     
 '''QUARTERLY Pydantic models / schemas for reading / returning'''
 class Weekly(WeeklyBase):

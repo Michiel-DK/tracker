@@ -421,14 +421,14 @@ def create_tables():
         """CREATE TABLE prices (
             index INT,
             date DATE,
-            open INT,
-            high INT,
-            low INT,
-            close INT,
+            open NUMERIC(9,2),
+            high NUMERIC(9,2),
+            low NUMERIC(9,2),
+            close NUMERIC(9,2),
             volume INT,
             dividends INT,
-            splits INT,
-            ticker INT,
+            stocksplits INT,
+            ticker TEXT,
             key VARCHAR (20) UNIQUE
             )"""
         )

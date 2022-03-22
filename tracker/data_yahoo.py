@@ -239,9 +239,32 @@ class Yahoo:
         prices.reset_index(inplace=True)
         prices.columns = [x.replace(' ','').lower() for x in list(prices.columns)]
         prices['ticker'] = self.ticker
-        prices['key'] = prices['date'].apply(lambda x: x.strftime("%Y/%m/%d") + self.ticker) 
+        prices['key'] = prices['date'].apply(lambda x: x.strftime("%Y/%m/%d") + "-" + self.ticker)
         
-        return prices
+        columns = ['date',
+                   'open',
+                   'high',
+                   'low',
+                   'close',
+                   'volume',
+                   'dividends',
+                   'stocksplits',
+                   'ticker',
+                   'key']
+        
+        empty = pd.DataFrame(columns=columns, index=prices.index)
+        
+        empty['date'] = empty['date'].astype('datetime64[ns]')
+                    
+        combo_merged = empty.merge(prices, how='right').set_index(empty.index)
+        
+        combo_merged.dropna(inplace=True)
+        
+        #combo_merged = combo_merged.fillna(0).astype('float').astype('int')
+        
+        combo_merged[['volume', 'dividends', 'stocksplits']] = combo_merged[['volume', 'dividends', 'stocksplits']].astype('int')
+            
+        return combo_merged
         
 
     def get_financials(self):

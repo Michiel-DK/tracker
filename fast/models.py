@@ -3,6 +3,15 @@ from sqlalchemy.orm import relationship
 
 from .database import Base
 
+class Prices(Base):
+    __tablename__ = "prices"
+
+    index = Column(Integer, primary_key=False, index=True)
+    date = Column(String, primary_key=False, index=False)
+    close = Column(Float, primary_key=False, index=False)
+    ticker = Column(String, primary_key=False, index=False)
+    key = Column(String, unique=True, primary_key=True, index=False)
+
 '''Weekly models'''
 
 class Weekly(Base):

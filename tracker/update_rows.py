@@ -191,7 +191,8 @@ if __name__ == '__main__':
         try:
             individ = time.time()
             prices = full.get_prices()
-            copy_from_stringio(fundamentals, 'prices')
+            print(prices)
+            copy_from_stringio(prices, 'prices')
             #print(f"time for i {ticker} : {time.time() - individ}")
             time_p.append(time.time() - individ)
             print(f"p - {ticker}")
