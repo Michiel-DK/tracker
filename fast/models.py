@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 
 from .database import Base
 
-'''QUARTERLY models'''
+'''Weekly models'''
 
 class Weekly(Base):
     __tablename__ = "weekly_info"
@@ -14,6 +14,8 @@ class Weekly(Base):
     key = Column(String, unique=True, primary_key=True, index=False)
 
     #items = relationship("Item", back_populates="owner")
+    
+'''QUARTERLY models'''
     
 class Moatq(Base):
     __tablename__ = "quarterly_moat"
@@ -168,3 +170,4 @@ class Growthy(Base):
     year = Column(String, primary_key=False, index=False)
     ticker = Column(String, primary_key=False, index=False)
     key = Column(String, unique=True, primary_key=True, index=False)
+    

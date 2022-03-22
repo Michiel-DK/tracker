@@ -417,7 +417,20 @@ def create_tables():
                 ytdreturn TEXT,
                 zip TEXT,
                 key VARCHAR (20) UNIQUE
-        )"""
+        )""",
+        """CREATE TABLE prices (
+            index INT,
+            date DATE,
+            open INT,
+            high INT,
+            low INT,
+            close INT,
+            volume INT,
+            dividends INT,
+            splits INT,
+            ticker INT,
+            key VARCHAR (20) UNIQUE
+            )"""
         )
     conn = None
     try:

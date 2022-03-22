@@ -231,6 +231,18 @@ class Yahoo:
         #info_combo.fillna('null', inplace=True)
         
         return info_combo
+    
+    def get_prices(self):
+        tick = self.get_ticker()
+        prices = tick.history(period="max")
+        
+        prices.reset_index(inplace=True)
+        prices.columns = [x.replace(' ','').lower() for x in list(prices.columns)]
+        prices['ticker'] = self.ticker
+        prices['key'] = prices['date'].apply(lambda x: x.strftime("%Y/%m/%d") + self.ticker) 
+        
+        return prices
+        
 
     def get_financials(self):
         """get financials from yahoo"""
@@ -476,5 +488,5 @@ class Yahoo:
 
         
 if __name__ == '__main__':
-    tri = Yahoo('TRI.PA').get_fundamentals()
+    tri = Yahoo('TRI.PA').get_prices()
     print(tri)

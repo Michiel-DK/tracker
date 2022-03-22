@@ -42,6 +42,11 @@ def get_db():
 def read_items(ticker: str, db: Session = Depends(get_db)):
     items = crud.get_weekly(db, ticker=ticker)
     return items
+
+@app.get("/weekly_all/", response_model=List[schemas.Weekly])
+def read_items(db: Session = Depends(get_db)):
+    items = crud.get_all_tickers(db)
+    return items
         
 '''QUARTERLY ENDPOINTS'''
 

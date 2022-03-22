@@ -9,7 +9,7 @@ class WeeklyBase(BaseModel):
     ticker: str
     grossmargin: Optional[float] = None
     key: str
-
+    
 class WeeklyCreate(WeeklyBase):
     pass
 
@@ -153,7 +153,7 @@ class Weekly(WeeklyBase):
     class Config:
         #orm_mode will tell the Pydantic model to read the data even if it is not a dict, but an ORM model
         orm_mode = True
-    
+        
 class Moatq(MoatqBase):
     index: int
     

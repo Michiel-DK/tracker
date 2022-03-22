@@ -56,3 +56,18 @@ def weekly_import(tickers):
         except KeyError:
                 print(f'Key error for i {ticker}')
                 pass
+            
+def get_prices(tickers):
+    tickers = [x.strip(' ') for x in tickers]
+    for ticker in tickers:
+        full = Yahoo(ticker)
+        try:
+            info = full.history(period="max")
+            copy_from_stringio(info, 'weekly_info')
+            print(f"i - {ticker}")
+        except AttributeError:
+                print(f'Attribute error for i {ticker}')
+                pass
+        except KeyError:
+                print(f'Key error for i {ticker}')
+                pass
