@@ -1,9 +1,9 @@
 from typing import List, Optional
-
+import datetime
 from pydantic import BaseModel
 
 class PricesBase(BaseModel):
-    date: str
+    date: datetime.date
     close: Optional[float] = None
     ticker: str
     key: str
