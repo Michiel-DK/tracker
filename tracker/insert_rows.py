@@ -22,15 +22,18 @@ from dotenv import dotenv_values
 
 #engine = create_engine(f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}")
 
-try:
-    SQLALCHEMY_DATABASE_URL = f"postgresql://{os.environ['POSTGRES_USER']}:{os.environ['POSTGRES_PASSWORD']}@{os.environ['POSTGRES_SERVER']}:{os.environ['POSTGRES_PORT']}/{os.environ['POSTGRES_DB']}"
-    print(SQLALCHEMY_DATABASE_URL)
-    engine = create_engine(SQLALCHEMY_DATABASE_URL)
-except KeyError:
-    database_env = dotenv_values("database.env")
-    SQLALCHEMY_DATABASE_URL = f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}"
-    engine = create_engine(SQLALCHEMY_DATABASE_URL)
+# try:
+#     SQLALCHEMY_DATABASE_URL = f"postgresql://{os.environ['POSTGRES_USER']}:{os.environ['POSTGRES_PASSWORD']}@{os.environ['POSTGRES_SERVER']}:{os.environ['POSTGRES_PORT']}/{os.environ['POSTGRES_DB']}"
+#     print(SQLALCHEMY_DATABASE_URL)
+#     engine = create_engine(SQLALCHEMY_DATABASE_URL)
+# except KeyError:
+#     database_env = dotenv_values("database.env")
+#     SQLALCHEMY_DATABASE_URL = f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}"
+#     engine = create_engine(SQLALCHEMY_DATABASE_URL)
+    
 
+SQLALCHEMY_DATABASE_URL = "postgresql://postgres:abc123@db:5432/tracker"
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 def copy_from_stringio(df, table):
     """
