@@ -231,6 +231,41 @@ class Yahoo:
         #info_combo.fillna('null', inplace=True)
         
         return info_combo
+    
+    def get_prices(self):
+        tick = self.get_ticker()
+        prices = tick.history(period="max")
+        
+        prices.reset_index(inplace=True)
+        prices.columns = [x.replace(' ','').lower() for x in list(prices.columns)]
+        prices['ticker'] = self.ticker
+        prices['key'] = prices['date'].apply(lambda x: x.strftime("%Y/%m/%d") + "-" + self.ticker)
+        
+        columns = ['date',
+                   'open',
+                   'high',
+                   'low',
+                   'close',
+                   'volume',
+                   'dividends',
+                   'stocksplits',
+                   'ticker',
+                   'key']
+        
+        empty = pd.DataFrame(columns=columns, index=prices.index)
+        
+        empty['date'] = empty['date'].astype('datetime64[ns]')
+                    
+        combo_merged = empty.merge(prices, how='right').set_index(empty.index)
+        
+        combo_merged.dropna(inplace=True)
+        
+        #combo_merged = combo_merged.fillna(0).astype('float').astype('int')
+        
+        combo_merged[['volume', 'dividends', 'stocksplits']] = combo_merged[['volume', 'dividends', 'stocksplits']].astype('int')
+            
+        return combo_merged
+        
 
     def get_financials(self):
         """get financials from yahoo"""
@@ -476,5 +511,5 @@ class Yahoo:
 
         
 if __name__ == '__main__':
-    tri = Yahoo('TRI.PA').get_fundamentals()
+    tri = Yahoo('TRI.PA').get_prices()
     print(tri)

@@ -22,18 +22,15 @@ from dotenv import dotenv_values
 
 #engine = create_engine(f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}")
 
-# try:
-#     SQLALCHEMY_DATABASE_URL = f"postgresql://{os.environ['POSTGRES_USER']}:{os.environ['POSTGRES_PASSWORD']}@{os.environ['POSTGRES_SERVER']}:{os.environ['POSTGRES_PORT']}/{os.environ['POSTGRES_DB']}"
-#     print(SQLALCHEMY_DATABASE_URL)
-#     engine = create_engine(SQLALCHEMY_DATABASE_URL)
-# except KeyError:
-#     database_env = dotenv_values("database.env")
-#     SQLALCHEMY_DATABASE_URL = f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}"
-#     engine = create_engine(SQLALCHEMY_DATABASE_URL)
-    
+try:
+    SQLALCHEMY_DATABASE_URL = f"postgresql://{os.environ['POSTGRES_USER']}:{os.environ['POSTGRES_PASSWORD']}@{os.environ['POSTGRES_SERVER']}:{os.environ['POSTGRES_PORT']}/{os.environ['POSTGRES_DB']}"
+    print(SQLALCHEMY_DATABASE_URL)
+    engine = create_engine(SQLALCHEMY_DATABASE_URL)
+except KeyError:
+    database_env = dotenv_values("database.env")
+    SQLALCHEMY_DATABASE_URL = f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}"
+    engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:abc123@db:5432/tracker"
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 def copy_from_stringio(df, table):
     """
@@ -153,28 +150,6 @@ if __name__ == '__main__':
     tickers = [x.strip(' ') for x in tickers]
     tickers = sample(tickers, 2)
     for ticker in tickers:
-        full = Yahoo(ticker, timing='q')
-        try:
-            individ = time.time()
-            fundamentals = full.get_fundamentals()
-            copy_from_stringio(fundamentals, 'quarterly_financials')
-            moat, health = full.get_checklist()
-            copy_from_stringio(moat, 'quarterly_moat')
-            copy_from_stringio(health, 'quarterly_health')
-            growth = full.get_growth()
-            copy_from_stringio(growth, 'quarterly_growth')
-            #print(f"time for q {ticker} : {time.time() - individ}")
-            print(f"q - {ticker}")
-            time_q.append(time.time() - individ)
-        except AttributeError:
-                print(f'Attribute error for q {ticker}')
-                not_found_q.append(ticker)
-                pass
-        except KeyError:
-                print(f'Key error for q {ticker}')
-                not_found_q.append(ticker)
-                pass
-
         full = Yahoo(ticker)
         try:
             individ = time.time()
@@ -216,6 +191,7 @@ if __name__ == '__main__':
         try:
             individ = time.time()
             prices = full.get_prices()
+            print(prices)
             copy_from_stringio(prices, 'prices')
             #print(f"time for i {ticker} : {time.time() - individ}")
             time_p.append(time.time() - individ)
@@ -231,10 +207,6 @@ if __name__ == '__main__':
             
     end = time.time()-start
     print(f"total run-time info: {end/60} min")
-    print(f"total time q {sum(time_q)/60}, avg time q {np.mean(time_q)}")
-    print(f"not found q {not_found_q}")
-    print(f"total time y {sum(time_y)/60}, avg time y {np.mean(time_y)}")
-    print(f"not found y {not_found_y}")
     print(f"total time i {sum(time_i)/60}, avg time i {np.mean(time_i)}")
     print(f"not found i {not_found_i}")
     print(f"total time p {sum(time_p)/60} in minutes, avg time p {np.mean(time_p)} in seconds")

@@ -1,9 +1,18 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float, Date
 from sqlalchemy.orm import relationship
 
 from .database import Base
 
-'''QUARTERLY models'''
+class Prices(Base):
+    __tablename__ = "prices"
+
+    index = Column(Integer, primary_key=False, index=True)
+    date = Column(Date, primary_key=False, index=False)
+    close = Column(Float, primary_key=False, index=False)
+    ticker = Column(String, primary_key=False, index=False)
+    key = Column(String, unique=True, primary_key=True, index=False)
+
+'''Weekly models'''
 
 class Weekly(Base):
     __tablename__ = "weekly_info"
@@ -14,6 +23,8 @@ class Weekly(Base):
     key = Column(String, unique=True, primary_key=True, index=False)
 
     #items = relationship("Item", back_populates="owner")
+    
+'''QUARTERLY models'''
     
 class Moatq(Base):
     __tablename__ = "quarterly_moat"
@@ -168,3 +179,4 @@ class Growthy(Base):
     year = Column(String, primary_key=False, index=False)
     ticker = Column(String, primary_key=False, index=False)
     key = Column(String, unique=True, primary_key=True, index=False)
+    
