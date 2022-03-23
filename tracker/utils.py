@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
-
+from io import StringIO
+import psycopg2
 
 def reduce_memory_usage(df, verbose=False):
     """function to reduce dataframe memory usage"""
@@ -58,4 +59,26 @@ def print_type(df):
         else:
             print(f"{i} REAL,")
     
-    
+
+
+def copy_from_stringio(df, table, engine):
+    """
+    Here we are going save the dataframe in memory 
+    and use copy_from() to copy it to the table
+    """
+    # save dataframe to an in memory buffer
+    buffer = StringIO()
+    df.to_csv(buffer, index_label='id', header=False, sep=";")
+    buffer.seek(0)
+    conn = engine.raw_connection()
+    # create a new cursor    
+    cursor = conn.cursor()
+    try:
+        cursor.copy_from(buffer, table, sep=";", null='')
+        conn.commit()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print("Error: %s" % error)
+        conn.rollback()
+        cursor.close()
+        return 1
+    cursor.close()
