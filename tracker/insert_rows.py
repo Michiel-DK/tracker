@@ -13,6 +13,7 @@ from sqlalchemy.orm import sessionmaker
 from random import sample
 import os
 from dotenv import dotenv_values
+import requests, urllib3
 
     
 #root_dir = os.path.dirname(__file__)
@@ -197,6 +198,9 @@ if __name__ == '__main__':
                 print(f'Key error for y {ticker}')
                 not_found_y.append(ticker)
                 pass
+        except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError, urllib3.exceptions.ProtocolError):
+                print(f'Connection error for y {ticker}')
+                pass
 
         try:
             individ = time.time()
@@ -213,6 +217,9 @@ if __name__ == '__main__':
                 print(f'Key error for i {ticker}')
                 not_found_i.append(ticker)
                 pass
+        except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError, urllib3.exceptions.ProtocolError):
+                print(f'Connection error for y {ticker}')
+                pass
             
         try:
             individ = time.time()
@@ -228,6 +235,9 @@ if __name__ == '__main__':
         except KeyError:
                 print(f'Key error for p {ticker}')
                 not_found_p.append(ticker)
+                pass
+        except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError, urllib3.exceptions.ProtocolError):
+                print(f'Connection error for y {ticker}')
                 pass
             
     end = time.time()-start
