@@ -150,8 +150,11 @@ if __name__ == '__main__':
     #tickers = get_tickers()
     root_dir = os.path.dirname(__file__)
     csv_path = os.path.join(root_dir, "data", "euronext.csv")
-    tickers = list(pd.read_csv(csv_path, sep=';')['yahoo'])
-    tickers = [x.strip(' ') for x in tickers]
+    full_l = list(pd.read_csv(csv_path, sep=';')['yahoo'])
+    full_l = [x.strip(' ') for x in full_l]
+    tickers = full_l[:2]
+    del full_l[:2]
+    pd.DataFrame.to_csv(pd.DataFrame({'yahoo': full_l}), csv_path, sep=';')
     for ticker in tickers:
         print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
         full = Yahoo(ticker, timing='q')
@@ -178,7 +181,7 @@ if __name__ == '__main__':
         except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError, urllib3.exceptions.ProtocolError):
                 time.sleep(30)
                 print(f'Connection error for q {ticker}')
-                continue
+                pass
         except ValueError:
                 print(f'Value error for q {ticker} - probably delisted')
                 pass
@@ -207,7 +210,7 @@ if __name__ == '__main__':
         except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError, urllib3.exceptions.ProtocolError):
                 time.sleep(30)
                 print(f'Connection error for y {ticker}')
-                continue
+                pass
         except ValueError:
                 print(f'Value error for y {ticker} - probably delisted')
                 pass
@@ -230,7 +233,7 @@ if __name__ == '__main__':
         except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError, urllib3.exceptions.ProtocolError):
                 time.sleep(30)
                 print(f'Connection error for i {ticker}')
-                continue
+                pass
         except ValueError:
                 print(f'Value error for i {ticker} - probably delisted')
                 pass
@@ -266,8 +269,9 @@ if __name__ == '__main__':
     print(f"not found y {not_found_y}")
     print(f"total time i {sum(time_i)/60}, avg time i {np.mean(time_i)}")
     print(f"not found i {not_found_i}")
-    print(f"total time p {sum(time_p)/60} in minutes, avg time p {np.mean(time_p)} in seconds")
-    print(f"not found p {not_found_p}")
+    
+    # print(f"total time p {sum(time_p)/60} in minutes, avg time p {np.mean(time_p)} in seconds")
+    # print(f"not found p {not_found_p}")
     
     
     #build in ticker check foreign + US

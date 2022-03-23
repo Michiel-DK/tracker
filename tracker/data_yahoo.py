@@ -511,5 +511,5 @@ class Yahoo:
 
         
 if __name__ == '__main__':
-    tri = Yahoo('TRI.PA').get_prices()
+    tri = Yahoo('SAN.PA').get_fundamentals()
     print(tri)
