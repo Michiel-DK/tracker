@@ -235,28 +235,28 @@ if __name__ == '__main__':
                 print(f'Value error for i {ticker} - probably delisted')
                 pass
             
-        try:
-            individ = time.time()
-            prices = full.get_prices()
-            copy_from_stringio(prices, 'prices')
-            #print(f"time for i {ticker} : {time.time() - individ}")
-            time_p.append(time.time() - individ)
-            print(f"p - {ticker}")
-        except AttributeError:
-                print(f'Attribute error for p {ticker}')
-                not_found_p.append(ticker)
-                pass
-        except KeyError:
-                print(f'Key error for p {ticker}')
-                not_found_p.append(ticker)
-                pass
-        except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError, urllib3.exceptions.ProtocolError):
-                time.sleep(30)
-                print(f'Connection error for p {ticker}')
-                continue
-        except ValueError:
-                print(f'Value error for p {ticker} - probably delisted')
-                pass
+        # try:
+        #     individ = time.time()
+        #     prices = full.get_prices()
+        #     copy_from_stringio(prices, 'prices')
+        #     #print(f"time for i {ticker} : {time.time() - individ}")
+        #     time_p.append(time.time() - individ)
+        #     print(f"p - {ticker}")
+        # except AttributeError:
+        #         print(f'Attribute error for p {ticker}')
+        #         not_found_p.append(ticker)
+        #         pass
+        # except KeyError:
+        #         print(f'Key error for p {ticker}')
+        #         not_found_p.append(ticker)
+        #         pass
+        # except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError, urllib3.exceptions.ProtocolError):
+        #         time.sleep(30)
+        #         print(f'Connection error for p {ticker}')
+        #         continue
+        # except ValueError:
+        #         print(f'Value error for p {ticker} - probably delisted')
+        #         pass
             
     end = time.time()-start
     print(f"total run-time info: {end/60} min")
