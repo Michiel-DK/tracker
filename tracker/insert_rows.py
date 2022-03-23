@@ -176,6 +176,10 @@ if __name__ == '__main__':
                 print(f'Key error for q {ticker}')
                 not_found_q.append(ticker)
                 pass
+        except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError, urllib3.exceptions.ProtocolError):
+                time.sleep(30)
+                print(f'Connection error for y {ticker}')
+                continue
 
         full = Yahoo(ticker)
         try:
@@ -199,8 +203,9 @@ if __name__ == '__main__':
                 not_found_y.append(ticker)
                 pass
         except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError, urllib3.exceptions.ProtocolError):
+                time.sleep(30)
                 print(f'Connection error for y {ticker}')
-                pass
+                continue
 
         try:
             individ = time.time()
@@ -218,8 +223,9 @@ if __name__ == '__main__':
                 not_found_i.append(ticker)
                 pass
         except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError, urllib3.exceptions.ProtocolError):
+                time.sleep(30)
                 print(f'Connection error for y {ticker}')
-                pass
+                continue
             
         try:
             individ = time.time()
@@ -237,8 +243,9 @@ if __name__ == '__main__':
                 not_found_p.append(ticker)
                 pass
         except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError, urllib3.exceptions.ProtocolError):
+                time.sleep(30)
                 print(f'Connection error for y {ticker}')
-                pass
+                continue
             
     end = time.time()-start
     print(f"total run-time info: {end/60} min")
