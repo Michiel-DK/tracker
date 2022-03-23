@@ -178,8 +178,11 @@ if __name__ == '__main__':
                 pass
         except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError, urllib3.exceptions.ProtocolError):
                 time.sleep(30)
-                print(f'Connection error for y {ticker}')
+                print(f'Connection error for q {ticker}')
                 continue
+        except ValueError:
+                print(f'Value error for q {ticker} - probably delisted')
+                pass
 
         full = Yahoo(ticker)
         try:
@@ -206,6 +209,9 @@ if __name__ == '__main__':
                 time.sleep(30)
                 print(f'Connection error for y {ticker}')
                 continue
+        except ValueError:
+                print(f'Value error for y {ticker} - probably delisted')
+                pass
 
         try:
             individ = time.time()
@@ -224,8 +230,11 @@ if __name__ == '__main__':
                 pass
         except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError, urllib3.exceptions.ProtocolError):
                 time.sleep(30)
-                print(f'Connection error for y {ticker}')
+                print(f'Connection error for i {ticker}')
                 continue
+        except ValueError:
+                print(f'Value error for i {ticker} - probably delisted')
+                pass
             
         try:
             individ = time.time()
@@ -244,8 +253,11 @@ if __name__ == '__main__':
                 pass
         except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError, urllib3.exceptions.ProtocolError):
                 time.sleep(30)
-                print(f'Connection error for y {ticker}')
+                print(f'Connection error for p {ticker}')
                 continue
+        except ValueError:
+                print(f'Value error for p {ticker} - probably delisted')
+                pass
             
     end = time.time()-start
     print(f"total run-time info: {end/60} min")
