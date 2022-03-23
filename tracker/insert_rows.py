@@ -153,6 +153,7 @@ if __name__ == '__main__':
     tickers = [x.strip(' ') for x in tickers]
     tickers = sample(tickers, 2)
     for ticker in tickers:
+        print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
         full = Yahoo(ticker, timing='q')
         try:
             individ = time.time()
