@@ -33,7 +33,7 @@ import requests, urllib3
 #     engine = create_engine(SQLALCHEMY_DATABASE_URL)
     
 
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:abc123@db:5432/tracker"
+SQLALCHEMY_DATABASE_URL = os.environ('DATABASE_URL')
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 def copy_from_stringio(df, table):
