@@ -12,7 +12,7 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 from random import sample
 import os
-from dotenv import dotenv_values
+from dotenv import load_dotenv
 import requests, urllib3
 
     
@@ -31,9 +31,11 @@ import requests, urllib3
 #     database_env = dotenv_values("database.env")
 #     SQLALCHEMY_DATABASE_URL = f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}"
 #     engine = create_engine(SQLALCHEMY_DATABASE_URL)
-    
 
-SQLALCHEMY_DATABASE_URL = os.environ('DATABASE_URL')
+load_dotenv()
+
+SQLALCHEMY_DATABASE_URL=os.environ.get('DATABASE_URL')
+
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 def copy_from_stringio(df, table):

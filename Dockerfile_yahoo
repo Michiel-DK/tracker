@@ -11,8 +11,12 @@ COPY setup.py /setup.py
 COPY scripts /scripts
 COPY requirements_tracker.txt /requirements_tracker.txt
 COPY crontab /etc/cron.d/crontab
+COPY tracker_entrypoint.sh /etc/cron.d/tracker_entrypoint.sh
 
-RUN apt-get update && apt-get -y install libpq-dev gcc cron vim && chmod 0644 /etc/cron.d/crontab &&/usr/bin/crontab /etc/cron.d/crontab
+RUN apt-get update && apt-get -y install libpq-dev gcc cron vim && chmod 0644 /etc/cron.d/crontab &&/usr/bin/crontab /etc/cron.d/crontab \
+&& chmod 0644 /etc/cron.d/tracker_entrypoint.sh
 RUN pip install --upgrade pip wheel && pip install -r requirements_tracker.txt && pip install -e .
 
-CMD ["cron", "-f"]
+#CMD ["cron", "-f"]
+#RUN ["chmod", "+x", "/etc/cron.d/tracker_entrypoint.sh"]
+ENTRYPOINT ["sh", "/etc/cron.d/tracker_entrypoint.sh"]
