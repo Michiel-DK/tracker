@@ -11,12 +11,15 @@ import os
 
 #conn = psycopg2.connect(**params)
 
-try:
-    from dotenv import dotenv_values
-    database_env = dotenv_values("database.env")
-    engine = create_engine(f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}")
-except KeyError:
-    engine = create_engine(f"postgresql://{os.environ['POSTGRES_USER']}:{os.environ['POSTGRES_PASSWORD']}@localhost:{os.environ['POSTGRES_PORT']}/{os.environ['POSTGRES_DB']}")
+# try:
+#     from dotenv import dotenv_values
+#     database_env = dotenv_values("database.env")
+#     engine = create_engine(f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}")
+# except KeyError:
+#     engine = create_engine(f"postgresql://{os.environ['POSTGRES_USER']}:{os.environ['POSTGRES_PASSWORD']}@localhost:{os.environ['POSTGRES_PORT']}/{os.environ['POSTGRES_DB']}")
+
+SQLALCHEMY_DATABASE_URL = "postgresql://postgres:abc123@db:5432/tracker"
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 Session = sessionmaker(bind=engine)
 

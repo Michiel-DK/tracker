@@ -12,7 +12,8 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 from random import sample
 import os
-from dotenv import dotenv_values
+from dotenv import load_dotenv
+import requests, urllib3
 
     
 #root_dir = os.path.dirname(__file__)
@@ -30,9 +31,11 @@ from dotenv import dotenv_values
 #     database_env = dotenv_values("database.env")
 #     SQLALCHEMY_DATABASE_URL = f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}"
 #     engine = create_engine(SQLALCHEMY_DATABASE_URL)
-    
 
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:abc123@db:5432/tracker"
+load_dotenv()
+
+SQLALCHEMY_DATABASE_URL=os.environ.get('DATABASE_URL')
+
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 def copy_from_stringio(df, table):
@@ -149,10 +152,13 @@ if __name__ == '__main__':
     #tickers = get_tickers()
     root_dir = os.path.dirname(__file__)
     csv_path = os.path.join(root_dir, "data", "euronext.csv")
-    tickers = list(pd.read_csv(csv_path, sep=';')['yahoo'])
-    tickers = [x.strip(' ') for x in tickers]
-    tickers = sample(tickers, 2)
+    full_l = list(pd.read_csv(csv_path, sep=';')['yahoo'])
+    full_l = [x.strip(' ') for x in full_l]
+    tickers = full_l[:2]
+    del full_l[:2]
+    pd.DataFrame.to_csv(pd.DataFrame({'yahoo': full_l}), csv_path, sep=';')
     for ticker in tickers:
+        print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
         full = Yahoo(ticker, timing='q')
         try:
             individ = time.time()
@@ -173,6 +179,13 @@ if __name__ == '__main__':
         except KeyError:
                 print(f'Key error for q {ticker}')
                 not_found_q.append(ticker)
+                pass
+        except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError, urllib3.exceptions.ProtocolError):
+                time.sleep(30)
+                print(f'Connection error for q {ticker}')
+                pass
+        except ValueError:
+                print(f'Value error for q {ticker} - probably delisted')
                 pass
 
         full = Yahoo(ticker)
@@ -196,6 +209,13 @@ if __name__ == '__main__':
                 print(f'Key error for y {ticker}')
                 not_found_y.append(ticker)
                 pass
+        except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError, urllib3.exceptions.ProtocolError):
+                time.sleep(30)
+                print(f'Connection error for y {ticker}')
+                pass
+        except ValueError:
+                print(f'Value error for y {ticker} - probably delisted')
+                pass
 
         try:
             individ = time.time()
@@ -212,22 +232,36 @@ if __name__ == '__main__':
                 print(f'Key error for i {ticker}')
                 not_found_i.append(ticker)
                 pass
+        except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError, urllib3.exceptions.ProtocolError):
+                time.sleep(30)
+                print(f'Connection error for i {ticker}')
+                pass
+        except ValueError:
+                print(f'Value error for i {ticker} - probably delisted')
+                pass
             
-        try:
-            individ = time.time()
-            prices = full.get_prices()
-            copy_from_stringio(prices, 'prices')
-            #print(f"time for i {ticker} : {time.time() - individ}")
-            time_p.append(time.time() - individ)
-            print(f"p - {ticker}")
-        except AttributeError:
-                print(f'Attribute error for p {ticker}')
-                not_found_p.append(ticker)
-                pass
-        except KeyError:
-                print(f'Key error for p {ticker}')
-                not_found_p.append(ticker)
-                pass
+        # try:
+        #     individ = time.time()
+        #     prices = full.get_prices()
+        #     copy_from_stringio(prices, 'prices')
+        #     #print(f"time for i {ticker} : {time.time() - individ}")
+        #     time_p.append(time.time() - individ)
+        #     print(f"p - {ticker}")
+        # except AttributeError:
+        #         print(f'Attribute error for p {ticker}')
+        #         not_found_p.append(ticker)
+        #         pass
+        # except KeyError:
+        #         print(f'Key error for p {ticker}')
+        #         not_found_p.append(ticker)
+        #         pass
+        # except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError, urllib3.exceptions.ProtocolError):
+        #         time.sleep(30)
+        #         print(f'Connection error for p {ticker}')
+        #         continue
+        # except ValueError:
+        #         print(f'Value error for p {ticker} - probably delisted')
+        #         pass
             
     end = time.time()-start
     print(f"total run-time info: {end/60} min")
@@ -237,8 +271,9 @@ if __name__ == '__main__':
     print(f"not found y {not_found_y}")
     print(f"total time i {sum(time_i)/60}, avg time i {np.mean(time_i)}")
     print(f"not found i {not_found_i}")
-    print(f"total time p {sum(time_p)/60} in minutes, avg time p {np.mean(time_p)} in seconds")
-    print(f"not found p {not_found_p}")
+    
+    # print(f"total time p {sum(time_p)/60} in minutes, avg time p {np.mean(time_p)} in seconds")
+    # print(f"not found p {not_found_p}")
     
     
     #build in ticker check foreign + US
