@@ -1,22 +1,15 @@
-import numpy as np
 from tracker.data_yahoo import Yahoo
-import time
-import pandas as pd
-from sqlalchemy import create_engine, text
-from random import sample
-import os
-from dotenv import dotenv_values
+from tracker.api_connection import get_all_tickers
+from sqlalchemy import create_engine
+import os, requests, urllib3, time
 from tracker.utils import copy_from_stringio
-import requests, urllib3
+from dotenv import load_dotenv
 
-try:
-    SQLALCHEMY_DATABASE_URL = f"postgresql://{os.environ['POSTGRES_USER']}:{os.environ['POSTGRES_PASSWORD']}@{os.environ['POSTGRES_SERVER']}:{os.environ['POSTGRES_PORT']}/{os.environ['POSTGRES_DB']}"
-    print(SQLALCHEMY_DATABASE_URL)
-    engine = create_engine(SQLALCHEMY_DATABASE_URL)
-except KeyError:
-    database_env = dotenv_values("database.env")
-    SQLALCHEMY_DATABASE_URL = f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}"
-    engine = create_engine(SQLALCHEMY_DATABASE_URL)
+load_dotenv()
+
+SQLALCHEMY_DATABASE_URL=os.environ.get('DATABASE_URL')
+
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 def update_quarter(ticker, engine):
     full = Yahoo(ticker, timing='q')
@@ -29,6 +22,22 @@ def update_quarter(ticker, engine):
     copy_from_stringio(growth, 'quarterly_growth', engine)
     print(f"i - {ticker} - {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))}")
     
-    
-
+if __name__ == '__main__':
+    tickers = get_all_tickers()
+    for ticker in tickers:
+        try:
+            update_quarter(ticker, engine)
+        except AttributeError:
+                print(f'Attribute error for q {ticker}')
+                continue
+        except KeyError:
+                print(f'Key error for q {ticker}')
+                continue
+        except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError, urllib3.exceptions.ProtocolError):
+                time.sleep(30)
+                print(f'Connection error for q {ticker}')
+                continue
+        except ValueError:
+                print(f'Value error for q {ticker} - probably delisted')
+                continue
             

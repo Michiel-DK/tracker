@@ -1,29 +1,21 @@
-import numpy as np
 from tracker.data_yahoo import Yahoo
-import time
-import pandas as pd
-from sqlalchemy import create_engine, text
-from random import sample
-import os
-from dotenv import dotenv_values
-from tracker.utils import copy_from_stringio
 from tracker.api_connection import get_all_tickers
-import requests, urllib3
+from sqlalchemy import create_engine
+import os, requests, urllib3, time
+from tracker.utils import copy_from_stringio
+from dotenv import load_dotenv
 
 
-try:
-    SQLALCHEMY_DATABASE_URL = f"postgresql://{os.environ['POSTGRES_USER']}:{os.environ['POSTGRES_PASSWORD']}@{os.environ['POSTGRES_SERVER']}:{os.environ['POSTGRES_PORT']}/{os.environ['POSTGRES_DB']}"
-    print(SQLALCHEMY_DATABASE_URL)
-    engine = create_engine(SQLALCHEMY_DATABASE_URL)
-except KeyError:
-    database_env = dotenv_values("database.env")
-    SQLALCHEMY_DATABASE_URL = f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}"
-    engine = create_engine(SQLALCHEMY_DATABASE_URL)
+load_dotenv()
+
+SQLALCHEMY_DATABASE_URL=os.environ.get('DATABASE_URL')
+
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 '''function to update weekly data'''
 
 def update_weekly(ticker, engine):
-    full = Yahoo(ticker)
+    full = Yahoo(ticker, full="n")
     #try weekly info
     try:
         info = full.get_info()
