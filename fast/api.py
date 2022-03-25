@@ -1,21 +1,15 @@
 import uvicorn
-from fastapi import FastAPI, Depends #, HTTPException
-#from pydantic import BaseModel
-#from tracker.frontend_functions import *
-#import asyncio
-
-from typing import List
-
-from sqlalchemy.orm import Session
-
-from . import crud, models, schemas
-from .database import SessionLocal, engine
+from fastapi import FastAPI, Depends
+from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
-    
-    
-    
+from typing import List
+from sqlalchemy.orm import Session
+from . import crud, schemas
+from .database import SessionLocal
 
 app = FastAPI()
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 app.add_middleware(
         CORSMiddleware,
@@ -37,6 +31,10 @@ def get_db():
 # def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 #     items = crud.get_weekly(db, skip=skip, limit=limit)
 #     return items
+
+@app.get("/token/")
+def read_items(token: str = Depends(oauth2_scheme)):
+    return {"token": token}
 
 @app.get("/prices/{ticker}", response_model=List[schemas.Prices])
 def read_items(ticker: str, db: Session = Depends(get_db)):

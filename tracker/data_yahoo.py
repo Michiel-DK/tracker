@@ -12,9 +12,10 @@ class Yahoo:
     #     return super(Yahoo, cls).__new__(cls)
     
     """Class to retrieve data Yahoo finance app"""
-    def __init__(self, ticker, timing=None):
+    def __init__(self, ticker, timing=None, full=None):
         self.ticker = ticker
         self.timing = timing
+        self.full = full
         
     def get_ticker(self):
         """get ticker class from yahoo"""
@@ -234,7 +235,9 @@ class Yahoo:
     
     def get_prices(self):
         tick = self.get_ticker()
-        prices = tick.history(period="max")
+        if self.full == 'y':
+            prices = tick.history(period="max")
+        prices = tick.history(period="1wk")
         
         prices.reset_index(inplace=True)
         prices.columns = [x.replace(' ','').lower() for x in list(prices.columns)]

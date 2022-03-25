@@ -188,7 +188,7 @@ if __name__ == '__main__':
                 print(f'Value error for q {ticker} - probably delisted')
                 pass
 
-        full = Yahoo(ticker)
+        full = Yahoo(ticker, full="y")
         try:
             individ = time.time()
             fundamentals = full.get_fundamentals()
