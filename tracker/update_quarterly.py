@@ -20,7 +20,7 @@ def update_quarter(ticker, engine):
     copy_from_stringio(health, 'quarterly_health', engine)
     growth = full.get_growth()
     copy_from_stringio(growth, 'quarterly_growth', engine)
-    print(f"i - {ticker} - {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))}")
+    print(f"q - {ticker} - {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))}")
     
 if __name__ == '__main__':
     tickers = get_all_tickers()

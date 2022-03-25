@@ -18,4 +18,4 @@ RUN apt update -y && apt install -y build-essential libpq-dev \
 
 EXPOSE 8000
 
-CMD uvicorn fast.api:app --host 0.0.0.0
+CMD uvicorn fast.api:app --host 0.0.0.0 --port 8000
