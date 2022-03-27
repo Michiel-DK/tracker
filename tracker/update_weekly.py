@@ -20,7 +20,7 @@ def update_weekly(ticker, engine):
         copy_from_stringio(info, 'weekly_info', engine)
         print(f"i - {ticker} - {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))}")
         prices = full.get_prices()
-        copy_from_stringio(prices, 'prices')
+        copy_from_stringio(prices, 'prices', engine)
         print(f"p - {ticker} - {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))}")
             
 if __name__ == '__main__':
