@@ -15,7 +15,8 @@ engine = create_engine(SQLALCHEMY_DATABASE_URL)
 '''function to update weekly data'''
 
 def update_weekly(ticker, engine):
-        full = Yahoo(ticker, full="n")
+        #full = Yahoo(ticker, full="n")
+        full = Yahoo(ticker, full="y")
         info = full.get_info()
         copy_from_stringio(info, 'weekly_info', engine)
         print(f"i - {ticker} - {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))}")
@@ -25,7 +26,10 @@ def update_weekly(ticker, engine):
             
 if __name__ == '__main__':
         tickers = get_all_tickers()
+        start = time.localtime(time.time())
+        print(f"Started run at {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))}")
         for ticker in tickers:
+                print(ticker)
                 try:
                         update_weekly(ticker, engine)
                 except AttributeError:
@@ -41,4 +45,4 @@ if __name__ == '__main__':
                 except ValueError:
                         print(f'Value error for i {ticker} - probably delisted')
                         continue
-                
+        print(f"Finished run at {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))} - total time:{time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())-start)}") 

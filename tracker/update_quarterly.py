@@ -5,6 +5,9 @@ import os, requests, urllib3, time
 from tracker.utils import copy_from_stringio
 from dotenv import load_dotenv
 
+from random import sample
+
+
 load_dotenv()
 
 SQLALCHEMY_DATABASE_URL=os.environ.get('DATABASE_URL')
@@ -24,7 +27,7 @@ def update_quarter(ticker, engine):
     
 if __name__ == '__main__':
     tickers = get_all_tickers()
-    for ticker in tickers:
+    for ticker in sample(tickers,2):
         try:
             update_quarter(ticker, engine)
         except AttributeError:
