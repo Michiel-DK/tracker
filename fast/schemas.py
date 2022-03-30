@@ -2,6 +2,18 @@ from typing import List, Optional
 import datetime
 from pydantic import BaseModel
 
+'''OTHER Pydantic models / schemas '''
+
+class User(BaseModel):
+    username: str
+    email: Optional[str] = None
+    full_name: Optional[str] = None
+    disabled: Optional[bool] = None
+
+class UserInDB(User):
+    hashed_password: str
+
+'''WEEKLY Pydantic models / schemas '''
 class PricesBase(BaseModel):
     date: datetime.date
     close: Optional[float] = None

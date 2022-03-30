@@ -49,4 +49,4 @@ if __name__ == '__main__':
                 except ValueError:
                         print(f'Value error for i {ticker} - probably delisted')
                         continue
-        print(f"Finished run at {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))} - total time:{time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())-start)}") 
+        #print(f"Finished run at {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))} - total time:{time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())-start)}") 
