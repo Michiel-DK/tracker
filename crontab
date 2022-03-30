@@ -1,6 +1,7 @@
 #run python script every 2 minutes
-*/2 * * * * /usr/local/bin/python /tracker/insert_rows.py >> /tracker/output_insert.txt 2>&1
+*/1 * * * * /usr/local/bin/python /tracker/update_weekly.py >> /tracker/update_weekly.txt 2>&1
+#*/2 * * * * /usr/local/bin/python /tracker/update_weekly.py >> /tracker/update_weekly.txt 2>&1
 1 0 1 * 1 /usr/local/bin/python /tracker/update_quarterly.py >> /tracker/output_quarterly.txt 2>&1
-1 0 * * 6 /usr/local/bin/python /tracker/update_weekly.py >> /tracker/output_weekly.txt 2>&1
+#1 0 * * 6 /usr/local/bin/python /tracker/update_weekly.py >> /tracker/output_weekly.txt 2>&1
 1 0 1 */6 1 /usr/local/bin/python /tracker/update_yearly.py >> /tracker/output_yearly.txt 2>&1
 
