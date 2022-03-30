@@ -93,56 +93,56 @@ def read_items(ticker: str, db: Session = Depends(get_db), current_user: schemas
     return items
 
 @app.get("/weekly/{ticker}", response_model=List[schemas.Weekly])
-def read_items(ticker: str, db: Session = Depends(get_db)):
+def read_items(ticker: str, db: Session = Depends(get_db), current_user: schemas.User = Depends(authentification.get_current_user)):
     items = crud.get_weekly(db, ticker=ticker)
     return items
 
 @app.get("/weekly_all/", response_model=List[schemas.Weekly])
-def read_items(db: Session = Depends(get_db)):
+def read_items(db: Session = Depends(get_db), current_user: schemas.User = Depends(authentification.get_current_user)):
     items = crud.get_all_tickers(db)
     return items
         
 '''QUARTERLY ENDPOINTS'''
 
 @app.get("/q_moat/{ticker}", response_model=List[schemas.Moatq])
-def read_items(ticker: str, db: Session = Depends(get_db)):
+def read_items(ticker: str, db: Session = Depends(get_db), current_user: schemas.User = Depends(authentification.get_current_user)):
     items = crud.get_moatq(db, ticker=ticker)
     return items
 
 @app.get("/q_health/{ticker}", response_model=List[schemas.Healthq])
-def read_items(ticker: str, db: Session = Depends(get_db)):
+def read_items(ticker: str, db: Session = Depends(get_db), current_user: schemas.User = Depends(authentification.get_current_user)):
     items = crud.get_healthq(db, ticker=ticker)
     return items
 
 @app.get("/q_financials/{ticker}", response_model=List[schemas.Financialsq])
-def read_items(ticker: str, db: Session = Depends(get_db)):
+def read_items(ticker: str, db: Session = Depends(get_db), current_user: schemas.User = Depends(authentification.get_current_user)):
     items = crud.get_financialsq(db, ticker=ticker)
     return items
 
 @app.get("/q_growth/{ticker}", response_model=List[schemas.Growthq])
-def read_items(ticker: str, db: Session = Depends(get_db)):
+def read_items(ticker: str, db: Session = Depends(get_db), current_user: schemas.User = Depends(authentification.get_current_user)):
     items = crud.get_growthq(db, ticker=ticker)
     return items
 
 '''YEARLY ENDPOINTS'''
 
 @app.get("/y_moat/{ticker}", response_model=List[schemas.Moaty])
-def read_items(ticker: str, db: Session = Depends(get_db)):
+def read_items(ticker: str, db: Session = Depends(get_db), current_user: schemas.User = Depends(authentification.get_current_user)):
     items = crud.get_moaty(db, ticker=ticker)
     return items
 
 @app.get("/y_health/{ticker}", response_model=List[schemas.Healthy])
-def read_items(ticker: str, db: Session = Depends(get_db)):
+def read_items(ticker: str, db: Session = Depends(get_db), current_user: schemas.User = Depends(authentification.get_current_user)):
     items = crud.get_healthy(db, ticker=ticker)
     return items
 
 @app.get("/y_financials/{ticker}", response_model=List[schemas.Financialsy])
-def read_items(ticker: str, db: Session = Depends(get_db)):
+def read_items(ticker: str, db: Session = Depends(get_db), current_user: schemas.User = Depends(authentification.get_current_user)):
     items = crud.get_financialsy(db, ticker=ticker)
     return items
 
 @app.get("/y_growth/{ticker}", response_model=List[schemas.Growthy])
-def read_items(ticker: str, db: Session = Depends(get_db)):
+def read_items(ticker: str, db: Session = Depends(get_db), current_user: schemas.User = Depends(authentification.get_current_user)):
     items = crud.get_growthy(db, ticker=ticker)
     return items
 
