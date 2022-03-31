@@ -30,15 +30,17 @@ class PricesBase(BaseModel):
 class PricesCreate(PricesBase):
     pass
 
-'''QUARTERLY Pydantic models / schemas '''
 #to have common attributes when reading or creating
 class WeeklyBase(BaseModel):
     ticker: str
     grossmargin: Optional[float] = None
     key: str
+    date: datetime.date
     
 class WeeklyCreate(WeeklyBase):
     pass
+
+'''QUARTERLY Pydantic models / schemas '''
 
 class MoatqBase(BaseModel):
     operatingmargin: Optional[float] = None

@@ -62,6 +62,7 @@ def get_db():
 #     items = crud.get_weekly(db, skip=skip, limit=limit)
 #     return items
 
+'''USERS ENDPOINTS'''
 
 @app.get("/token/")
 #will look in request for authorization header and check if value=Bearer + token => returns token as 'str'
@@ -86,6 +87,8 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
 @app.get("/users/me")
 def read_users_me(current_user: schemas.User = Depends(authentification.get_current_user)):
     return current_user
+
+'''WEEKLY ENDPOINTS'''
 
 @app.get("/prices/{ticker}", response_model=List[schemas.Prices])
 def read_items(ticker: str, db: Session = Depends(get_db), current_user: schemas.User = Depends(authentification.get_current_user)):

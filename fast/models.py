@@ -21,6 +21,7 @@ class Weekly(Base):
     ticker = Column(String, primary_key=False, index=False)
     grossmargins = Column(Float, primary_key=False, index=False)
     key = Column(String, unique=True, primary_key=True, index=False)
+    date = Column(Date, primary_key=False, index=False)
 
     #items = relationship("Item", back_populates="owner")
     

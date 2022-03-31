@@ -9,7 +9,6 @@ def get_weekly(db: Session, ticker:str):
 def get_all_tickers(db: Session):
     return db.query(models.Weekly).all()
 
-'''OTHER CRUD'''
 def get_prices(db: Session, ticker:str):
     return db.query(models.Prices).filter(models.Prices.ticker == ticker).all()
 
