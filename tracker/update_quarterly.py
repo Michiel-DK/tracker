@@ -4,6 +4,7 @@ from sqlalchemy import create_engine
 import os, requests, urllib3, time
 from tracker.utils import copy_from_stringio
 from dotenv import load_dotenv
+import pandas as pd
 
 from random import sample
 
@@ -26,21 +27,24 @@ def update_quarter(ticker, engine):
     print(f"q - {ticker} - {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))}")
     
 if __name__ == '__main__':
-    tickers = get_all_tickers()
-    for ticker in sample(tickers,2):
-        try:
-            update_quarter(ticker, engine)
-        except AttributeError:
-                print(f'Attribute error for q {ticker}')
-                continue
-        except KeyError:
-                print(f'Key error for q {ticker}')
-                continue
-        except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError, urllib3.exceptions.ProtocolError):
-                time.sleep(30)
-                print(f'Connection error for q {ticker}')
-                continue
-        except ValueError:
-                print(f'Value error for q {ticker} - probably delisted')
-                continue
+    #tickers = get_all_tickers()
+    print(f"Started run at {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))}")
+    tickers = list(pd.read_csv('../tracker/data/ticks_quart.csv', sep=';')['ticks'])
+    for ticker in tickers:
+            print(ticker)
+            try:
+                    update_quarter(ticker, engine)
+            except AttributeError:
+                    print(f'Attribute error for q {ticker}')
+                    continue
+            except KeyError:
+                    print(f'Key error for q {ticker}')
+                    continue
+            except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError, urllib3.exceptions.ProtocolError):
+                    time.sleep(30)
+                    print(f'Connection error for q {ticker}')
+                    continue
+            except ValueError:
+                    print(f'Value error for q {ticker} - probably delisted')
+                    continue
             
