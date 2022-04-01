@@ -26,6 +26,12 @@ def get_healthq(db: Session, ticker: str):
 def get_financialsq(db: Session, ticker=str):
     return db.query(models.Financialsq).filter(models.Financialsq.ticker == ticker).all()
 
+def get_financialsq_target(db: Session, year=str):
+    return db.query(models.Financialsq).filter(models.Financialsq.year != year).all()
+
+def get_financialsq_current(db: Session, year=str):
+    return db.query(models.Financialsq).filter(models.Financialsq.year == year).all()
+
 def get_growthq(db: Session, ticker=str):
     return db.query(models.Growthq).filter(models.Growthq.ticker == ticker).all()
 
