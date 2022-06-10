@@ -29,7 +29,10 @@ def update_quarter(ticker, engine):
 if __name__ == '__main__':
     #tickers = get_all_tickers()
     print(f"Started run at {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))}")
-    tickers = list(pd.read_csv('../tracker/data/ticks_quart.csv', sep=';')['ticks'])
+    full = list(pd.read_csv('../tracker/data/ticks_quart.csv', sep=';')['ticks'])
+    tickers = full[:2]
+    del full[:2]
+    pd.DataFrame.to_csv(pd.DataFrame({'ticks': full}), '../tracker/data/ticks_quart.csv', sep=';')
     for ticker in tickers:
             print(ticker)
             try:

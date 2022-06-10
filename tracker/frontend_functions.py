@@ -11,17 +11,17 @@ import os
 
 #conn = psycopg2.connect(**params)
 
-# 
-# 
-try:
-    from dotenv import dotenv_values
-    database_env = dotenv_values("database.env")
-    engine = create_engine(f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}")
-except KeyError:
-    engine = create_engine(f"postgresql://{os.environ['POSTGRES_USER']}:{os.environ['POSTGRES_PASSWORD']}@localhost:{os.environ['POSTGRES_PORT']}/{os.environ['POSTGRES_DB']}")
+# # 
+# # 
+# try:
+#     from dotenv import dotenv_values
+#     database_env = dotenv_values("database.env")
+#     engine = create_engine(f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}")
+# except KeyError:
+#     engine = create_engine(f"postgresql://{os.environ['POSTGRES_USER']}:{os.environ['POSTGRES_PASSWORD']}@localhost:{os.environ['POSTGRES_PORT']}/{os.environ['POSTGRES_DB']}")
 
-#SQLALCHEMY_DATABASE_URL = "postgresql://postgres:abc123@db:5432/tracker"
-#engine = create_engine(SQLALCHEMY_DATABASE_URL)
+SQLALCHEMY_DATABASE_URL = "postgresql://postgres:abc123@localhost:5432/tracker"
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 Session = sessionmaker(bind=engine)
 
@@ -169,7 +169,7 @@ def get_scanner_q():
     weekly = weekly[['ticker','totalcashpershare', 'enterprisetorevenue', 'enterprisetoebitda', 'beta','longname','sector', 'industry', 'market', 'country']]
     #combine
     ls = []
-    for i in q_moat[q_moat['year']=='2021Q3']['ticker']:
+    for i in q_moat[q_moat['year']=='2021Q4']['ticker']:
         ls.append([i, np.round(np.mean(q_moat[q_moat['ticker']==i]['moatpercentage']),2) , np.round(np.mean(q_health[q_health['ticker']==i]['percentage']),2), \
             np.mean([np.round(np.mean(q_moat[q_moat['ticker']==i]['moatpercentage']),2),np.round(np.mean(q_health[q_health['ticker']==i]['percentage']),2)])])
     check_2021_q = pd.DataFrame(ls, columns=['ticker', 'moat', 'health', 'avg'])

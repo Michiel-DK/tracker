@@ -14,7 +14,9 @@ load_dotenv()
 
 #SQLALCHEMY_DATABASE_URL=os.environ.get('DATABASE_URL')
 database_env = dotenv_values("database.env")
-SQLALCHEMY_DATABASE_URL = f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}"
+#SQLALCHEMY_DATABASE_URL = f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}"
+
+SQLALCHEMY_DATABASE_URL=os.environ.get('DATABASE_URL')
 
 '''setup engine'''
 engine = create_engine(
