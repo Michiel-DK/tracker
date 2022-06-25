@@ -16,15 +16,31 @@ SQLALCHEMY_DATABASE_URL=os.environ.get('DATABASE_URL')
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 def update_quarter(ticker, engine):
-    full = Yahoo(ticker, timing='q')
-    fundamentals = full.get_fundamentals()
-    copy_from_stringio(fundamentals, 'quarterly_financials', engine)
-    moat, health = full.get_checklist()
-    copy_from_stringio(moat, 'quarterly_moat', engine)
-    copy_from_stringio(health, 'quarterly_health', engine)
-    growth = full.get_growth()
-    copy_from_stringio(growth, 'quarterly_growth', engine)
-    print(f"q - {ticker} - {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))}")
+        full = Yahoo(ticker, timing='q')
+        
+        fundamentals = full.get_fundamentals()
+        for i in range(len(fundamentals)):
+                row = pd.DataFrame(fundamentals.iloc[i]).T
+                print(row)
+                copy_from_stringio(row, 'quarterly_financials', engine)
+                
+        moat, health = full.get_checklist()
+        for i in range(len(moat)):
+                row = pd.DataFrame(moat.iloc[i]).T
+                print(row)
+                copy_from_stringio(row, 'quarterly_moat', engine)
+        for i in range(len(health)):
+                row = pd.DataFrame(health.iloc[i]).T
+                print(row)
+                copy_from_stringio(row, 'quarterly_health', engine)
+                
+        growth = full.get_growth()
+        for i in range(len(growth)):
+                row = pd.DataFrame(growth.iloc[i]).T
+                print(row)
+                copy_from_stringio(row, 'quarterly_growth', engine)
+        
+        print(f"q - {ticker} - {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))}")
     
 if __name__ == '__main__':
     #tickers = get_all_tickers()
