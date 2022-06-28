@@ -169,7 +169,7 @@ def get_scanner_q():
     weekly = weekly[['ticker','totalcashpershare', 'enterprisetorevenue', 'enterprisetoebitda', 'beta','longname','sector', 'industry', 'market', 'country']]
     #combine
     ls = []
-    for i in q_moat[q_moat['year']=='2021Q4']['ticker']:
+    for i in q_moat[q_moat['year']=='2022Q1']['ticker']:
         ls.append([i, np.round(np.mean(q_moat[q_moat['ticker']==i]['moatpercentage']),2) , np.round(np.mean(q_health[q_health['ticker']==i]['percentage']),2), \
             np.mean([np.round(np.mean(q_moat[q_moat['ticker']==i]['moatpercentage']),2),np.round(np.mean(q_health[q_health['ticker']==i]['percentage']),2)])])
     check_2021_q = pd.DataFrame(ls, columns=['ticker', 'moat', 'health', 'avg'])

@@ -103,7 +103,7 @@ class GrowthqBase(BaseModel):
     debtequity: Optional[float] = None
     equityasset: Optional[float] = None
     goodwillassets: Optional[float] = None
-    year: str
+    #year: str
     ticker:str
     key: str
 
