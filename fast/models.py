@@ -36,7 +36,7 @@ class Moatq(Base):
     roa = Column(Float, primary_key=False, index=False)
     roe = Column(Float, primary_key=False, index=False)
     moatpercentage = Column(Float, primary_key=False, index=False)
-    #year = Column(String, primary_key=False, index=False)
+    year = Column(String, primary_key=False, index=False)
     ticker = Column(String, primary_key=False, index=False)
     key = Column(String, unique=True, primary_key=True, index=False)
     
@@ -99,7 +99,7 @@ class Growthq(Base):
     debtequity = Column(Float, primary_key=False, index=False)
     equityasset = Column(Float, primary_key=False, index=False)
     goodwillassets = Column(Float, primary_key=False, index=False)
-    #year = Column(String, primary_key=False, index=False)
+    year = Column(String, primary_key=False, index=False)
     ticker = Column(String, primary_key=False, index=False)
     key = Column(String, unique=True, primary_key=True, index=False)
     
