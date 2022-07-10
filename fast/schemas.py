@@ -33,9 +33,32 @@ class PricesCreate(PricesBase):
 #to have common attributes when reading or creating
 class WeeklyBase(BaseModel):
     ticker: str
-    grossmargin: Optional[float] = None
     key: str
     date: datetime.date
+    grossmargin: Optional[float] = None
+    currentratio: Optional[float] = None
+    debttoequity: Optional[float] = None
+    dividendrate: Optional[float] = None
+    dividendyield: Optional[float] = None
+    earningsgrowth: Optional[float] = None
+    earningsquarterlygrowth: Optional[float] = None
+    enterprisetoebitda: Optional[float] = None
+    enterprisetorevenue: Optional[float] = None
+    fiftydayaverage: Optional[float] = None
+    fiftytwoweeklow: Optional[float] = None
+    fiftytwoweekhigh: Optional[float] = None
+    currentprice: Optional[float] = None
+    fiveyearavgdividendyield: Optional[float] = None
+    earningsgrowth: Optional[float] = None
+    freecashflow: Optional[int] = None
+    marketcap: Optional[int] = None
+    pricetobook: Optional[float] = None
+    quickratio: Optional[float] = None
+    returnonassets: Optional[float] = None
+    returnonequity: Optional[float] = None
+    revenuequarterlygrowth: Optional[str] = None
+    sector: Optional[str] = None
+    industry: Optional[str] = None
     
 class WeeklyCreate(WeeklyBase):
     pass
