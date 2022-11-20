@@ -5,6 +5,7 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 import dotenv
+from dotenv import load_dotenv
 import os
 
 #params = config(filename='/Users/michieldekoninck/code/Michiel-DK/tracker/database.ini', section='postgresql')
@@ -20,7 +21,9 @@ import os
 # except KeyError:
 #     engine = create_engine(f"postgresql://{os.environ['POSTGRES_USER']}:{os.environ['POSTGRES_PASSWORD']}@localhost:{os.environ['POSTGRES_PORT']}/{os.environ['POSTGRES_DB']}")
 
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:abc123@localhost:5432/tracker"
+load_dotenv()
+
+SQLALCHEMY_DATABASE_URL = os.environ.get('DATABASE_URL')
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 Session = sessionmaker(bind=engine)
@@ -169,7 +172,7 @@ def get_scanner_q():
     weekly = weekly[['ticker','totalcashpershare', 'enterprisetorevenue', 'enterprisetoebitda', 'beta','longname','sector', 'industry', 'market', 'country']]
     #combine
     ls = []
-    for i in q_moat[q_moat['year']=='2022Q1']['ticker']:
+    for i in q_moat[q_moat['year']=='2022Q2']['ticker']:
         ls.append([i, np.round(np.mean(q_moat[q_moat['ticker']==i]['moatpercentage']),2) , np.round(np.mean(q_health[q_health['ticker']==i]['percentage']),2), \
             np.mean([np.round(np.mean(q_moat[q_moat['ticker']==i]['moatpercentage']),2),np.round(np.mean(q_health[q_health['ticker']==i]['percentage']),2)])])
     check_2021_q = pd.DataFrame(ls, columns=['ticker', 'moat', 'health', 'avg'])

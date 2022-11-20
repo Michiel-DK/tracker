@@ -62,8 +62,8 @@ postgres==4.0
 prometheus-client==0.13.1
 prompt-toolkit==3.0.24
 protobuf==3.19.4
-psycopg2-binary==2.9.3
-psycopg2-pool==1.1
+psycopg2-binary
+psycopg2-pool
 ptyprocess==0.7.0
 pure-eval==0.2.1
 pyarrow==7.0.0

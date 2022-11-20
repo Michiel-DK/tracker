@@ -2,7 +2,7 @@ import uvicorn
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
-from jose import JWTError, jwt
+#from jose import JWTError, jwt
 from passlib.context import CryptContext
 from typing import List
 from sqlalchemy.orm import Session, joinedload

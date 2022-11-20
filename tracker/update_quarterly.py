@@ -5,6 +5,7 @@ import os, requests, urllib3, time
 from tracker.utils import copy_from_stringio
 from dotenv import load_dotenv
 import pandas as pd
+import numpy as np
 
 from random import sample
 
@@ -45,10 +46,10 @@ def update_quarter(ticker, engine):
 if __name__ == '__main__':
     #tickers = get_all_tickers()
     print(f"Started run at {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))}")
-    full = list(pd.read_csv('../tracker/data/ticks_quart.csv', sep=';')['ticks'])
-    tickers = full[:2]
-    del full[:2]
-    pd.DataFrame.to_csv(pd.DataFrame({'ticks': full}), '../tracker/data/ticks_quart.csv', sep=';')
+    full = pd.read_csv('../tracker/data/ticks_quart.csv', sep=';')
+    tickers = list(full.iloc[[np.random.randint(0, len(full)),np.random.randint(0, len(full))]].ticks)
+    #del full[:2]
+    #pd.DataFrame.to_csv(pd.DataFrame({'ticks': full}), '../tracker/data/ticks_quart.csv', sep=';')
     for ticker in tickers:
             print(ticker)
             try:
