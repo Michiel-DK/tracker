@@ -110,6 +110,11 @@ def read_items(ticker: str, db: Session = Depends(get_db), current_user: schemas
 def read_items(db: Session = Depends(get_db), current_user: schemas.User = Depends(authentification.get_current_user)):
     items = crud.get_all_tickers(db)
     return items
+
+@app.get("/get_oldest_weekly/", response_model=schemas.Tick)
+def get_oldest_weekly(db: Session = Depends(get_db)):
+    items = crud.get_oldest_weekly(db)
+    return items
         
 '''QUARTERLY ENDPOINTS'''
 

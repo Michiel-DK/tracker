@@ -214,6 +214,15 @@ class Weekly(WeeklyBase):
         #orm_mode will tell the Pydantic model to read the data even if it is not a dict, but an ORM model
         orm_mode = True
         
+class Tick(BaseModel):
+    # Schema to only get back ticker
+    ticker: str
+    #owner_id: int
+    class Config:
+        #orm_mode will tell the Pydantic model to read the data even if it is not a dict, but an ORM model
+        orm_mode = True
+        
+        
 class Moatq(MoatqBase):
     index: int
     

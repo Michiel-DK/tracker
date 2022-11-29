@@ -12,6 +12,9 @@ def get_all_tickers(db: Session):
 def get_prices(db: Session, ticker:str):
     return db.query(models.Prices).filter(models.Prices.ticker == ticker).all()
 
+def get_oldest_weekly(db: Session):
+    return db.query(models.Weekly).order_by(models.Weekly.date.asc()).first()
+
 '''QUARTERLY CRUD'''
 
 # def get_weekly(db: Session, skip: int = 0, limit: int = 100):
@@ -34,6 +37,9 @@ def get_financialsq_current(db: Session, year=str):
 
 def get_growthq(db: Session, ticker=str):
     return db.query(models.Growthq).filter(models.Growthq.ticker == ticker).all()
+
+def get_oldest_q(db: Session):
+    return db.query(models.Financialsq).order_by(models.Financialsq.date.asc()).first()
 
 '''YEARLY CRUD'''
 

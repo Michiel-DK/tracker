@@ -6,6 +6,7 @@ from tracker.utils import copy_from_stringio
 from dotenv import load_dotenv
 import pandas as pd
 import numpy as np
+import requests
 
 load_dotenv()
 
@@ -33,23 +34,25 @@ if __name__ == '__main__':
         #tickers = full[:2]
         #del full[:2]
         #pd.DataFrame.to_csv(pd.DataFrame({'ticks': full}), '../tracker/data/ticks.csv', sep=';')
-        full = pd.read_csv('../tracker/data/ticks_quart.csv', sep=';')
-        tickers = list(full.iloc[[np.random.randint(0, len(full)),np.random.randint(0, len(full))]].ticks)
-        for ticker in tickers:
-                print(ticker)
-                try:
-                        update_weekly(ticker, engine)
-                except AttributeError:
-                        print(f'Attribute error for i {ticker}')
-                        continue
-                except KeyError:
-                        print(f'Key error for i {ticker}')
-                        continue
-                except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError, urllib3.exceptions.ProtocolError):
-                        time.sleep(30)
-                        print(f'Connection error for i {ticker}')
-                        continue
-                except ValueError:
-                        print(f'Value error for i {ticker} - probably delisted')
-                        continue
+        #full = pd.read_csv('../tracker/data/ticks_quart.csv', sep=';')
+        #tickers = list(full.iloc[[np.random.randint(0, len(full)),np.random.randint(0, len(full))]].ticks)
+        base_url = 'http://localhost:8000'
+
+        ticker = requests.get(base_url + '/get_oldest_weekly/').json()['key']
+        print(ticker)
+        try:
+                update_weekly(ticker, engine)
+        except AttributeError:
+                print(f'Attribute error for i {ticker}')
+                pass
+        except KeyError:
+                print(f'Key error for i {ticker}')
+                pass
+        except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError, urllib3.exceptions.ProtocolError):
+                time.sleep(30)
+                print(f'Connection error for i {ticker}')
+                pass
+        except ValueError:
+                print(f'Value error for i {ticker} - probably delisted')
+                pass
         #print(f"Finished run at {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))} - total time:{time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())-start)}") 

@@ -17,6 +17,7 @@ class Prices(Base):
 class Weekly(Base):
     __tablename__ = "weekly_info"
 
+
     index = Column(Integer, primary_key=False, index=True)
     ticker = Column(String, primary_key=False, index=False)
     key = Column(String, unique=True, primary_key=True, index=False)
@@ -46,6 +47,7 @@ class Weekly(Base):
     industry = Column(String, primary_key=False, index=False)
 
     #items = relationship("Item", back_populates="owner")
+    
     
 '''QUARTERLY models'''
     
