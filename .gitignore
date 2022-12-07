@@ -11,3 +11,4 @@ database.ini
 *.txt
 __pycache__
 *.dump
+*ipynb

@@ -11,6 +11,9 @@ dotenv_path = Path('../.env')
 load_dotenv(dotenv_path=dotenv_path)
 
 def config(filename='database.ini', section='postgresql'):
+    
+    """ configure database"""
+    
     # create a parser
     parser = ConfigParser()
     # read config file

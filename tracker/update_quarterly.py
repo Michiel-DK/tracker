@@ -1,6 +1,6 @@
 from tracker.data_yahoo import Yahoo
-from tracker.api_connection import get_all_tickers
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
+from sqlalchemy.orm import sessionmaker
 import os, requests, urllib3, time
 from tracker.utils import copy_from_stringio
 from dotenv import load_dotenv
@@ -16,7 +16,24 @@ SQLALCHEMY_DATABASE_URL=os.environ.get('DATABASE_URL')
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
+Session = sessionmaker(bind=engine)
+
+def get_random_tick():
+        
+        '''database call for random ticker != latest quarter'''
+        
+        session = Session()
+        newest = text("SELECT MAX(year) FROM quarterly_financials")
+        newest = session.execute(newest).one()[0]
+        query = text(f"SELECT ticker FROM quarterly_financials WHERE year != '{newest}' ORDER BY random() LIMIT 1")
+        tick = session.execute(query).one()[0]
+        session.close()
+        return tick
+
 def update_quarter(ticker, engine):
+        
+        ''' update quaterly financials + adjecent tables'''
+        
         full = Yahoo(ticker, timing='q')
         
         fundamentals = full.get_fundamentals()
@@ -26,6 +43,7 @@ def update_quarter(ticker, engine):
                 copy_from_stringio(row, 'quarterly_financials', engine)
                 
         moat, health = full.get_checklist()
+        
         for i in range(len(moat)):
                 row = pd.DataFrame(moat.iloc[i]).T
                 print(row)
@@ -44,27 +62,25 @@ def update_quarter(ticker, engine):
         print(f"q - {ticker} - {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))}")
     
 if __name__ == '__main__':
-    #tickers = get_all_tickers()
-    print(f"Started run at {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))}")
-    full = pd.read_csv('../tracker/data/ticks_quart.csv', sep=';')
-    tickers = list(full.iloc[[np.random.randint(0, len(full)),np.random.randint(0, len(full))]].ticks)
-    #del full[:2]
-    #pd.DataFrame.to_csv(pd.DataFrame({'ticks': full}), '../tracker/data/ticks_quart.csv', sep=';')
-    for ticker in tickers:
-            print(ticker)
-            try:
-                    update_quarter(ticker, engine)
-            except AttributeError:
-                    print(f'Attribute error for q {ticker}')
-                    continue
-            except KeyError:
-                    print(f'Key error for q {ticker}')
-                    continue
-            except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError, urllib3.exceptions.ProtocolError):
-                    time.sleep(30)
-                    print(f'Connection error for q {ticker}')
-                    continue
-            except ValueError:
-                    print(f'Value error for q {ticker} - probably delisted')
-                    continue
+        start = time.localtime(time.time())
+        ticker = get_random_tick()
+        print(f"Started run at {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))} for {ticker}")
+        try:
+                update_quarter(ticker, engine)
+        except AttributeError as a:
+                print(f'Attribute error for q {ticker}')
+                print(a)
+                pass
+        except KeyError as k:
+                print(f'Key error for q {ticker}')
+                print(k)
+                pass
+        except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError, urllib3.exceptions.ProtocolError):
+                time.sleep(30)
+                print(f'Connection error for q {ticker}')
+                pass
+        except ValueError as v:
+                print(f'Value error for q {ticker} - probably delisted')
+                print(v)
+                pass
             

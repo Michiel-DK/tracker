@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy.sql import func
 
 from . import models, schemas
 
@@ -12,13 +13,10 @@ def get_all_tickers(db: Session):
 def get_prices(db: Session, ticker:str):
     return db.query(models.Prices).filter(models.Prices.ticker == ticker).all()
 
-def get_oldest_weekly(db: Session):
-    return db.query(models.Weekly).order_by(models.Weekly.date.asc()).first()
+def get_random_weekly(db: Session):
+    return db.query(models.Weekly).order_by(func.random()).first()
 
 '''QUARTERLY CRUD'''
-
-# def get_weekly(db: Session, skip: int = 0, limit: int = 100):
-#     return db.query(models.Weekly).offset(skip).limit(limit).all()
 
 def get_moatq(db: Session, ticker: str):
     return db.query(models.Moatq).filter(models.Moatq.ticker == ticker).all()
