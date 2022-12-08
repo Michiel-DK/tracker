@@ -17,12 +17,37 @@ class Prices(Base):
 class Weekly(Base):
     __tablename__ = "weekly_info"
 
+
     index = Column(Integer, primary_key=False, index=True)
     ticker = Column(String, primary_key=False, index=False)
-    grossmargins = Column(Float, primary_key=False, index=False)
     key = Column(String, unique=True, primary_key=True, index=False)
+    date = Column(Date, primary_key=False, index=False)
+    grossmargins = Column(Float, primary_key=False, index=False)
+    currentratio = Column(Float, primary_key=False, index=False)
+    debttoequity = Column(Float, primary_key=False, index=False)
+    dividendrate = Column(Float, primary_key=False, index=False)
+    dividendyield = Column(Float, primary_key=False, index=False)
+    earningsgrowth = Column(Float, primary_key=False, index=False)
+    earningsquarterlygrowth = Column(Float, primary_key=False, index=False)
+    enterprisetoebitda = Column(Float, primary_key=False, index=False)
+    enterprisetorevenue = Column(Float, primary_key=False, index=False)
+    fiftydayaverage = Column(Float, primary_key=False, index=False)
+    fiftytwoweeklow = Column(Float, primary_key=False, index=False)
+    fiftytwoweekhigh = Column(Float, primary_key=False, index=False)
+    currentprice = Column(Float, primary_key=False, index=False)
+    fiveyearavgdividendyield = Column(Float, primary_key=False, index=False)
+    freecashflow = Column(Integer, primary_key=False, index=True)
+    marketcap = Column(Integer, primary_key=False, index=True)
+    pricetobook = Column(Float, primary_key=False, index=False)
+    quickratio = Column(Float, primary_key=False, index=False)
+    returnonassets = Column(Float, primary_key=False, index=False)
+    returnonequity = Column(Float, primary_key=False, index=False)
+    revenuequarterlygrowth = Column(String, primary_key=False, index=False)
+    sector = Column(String, primary_key=False, index=False)
+    industry = Column(String, primary_key=False, index=False)
 
     #items = relationship("Item", back_populates="owner")
+    
     
 '''QUARTERLY models'''
     

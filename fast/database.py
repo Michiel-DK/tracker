@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from dotenv import load_dotenv
+from dotenv import load_dotenv,dotenv_values
 import os
 
 # try:
@@ -11,6 +11,10 @@ import os
 #     database_env = dotenv_values("database.env")
 #     SQLALCHEMY_DATABASE_URL = f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}"
 load_dotenv()
+
+#SQLALCHEMY_DATABASE_URL=os.environ.get('DATABASE_URL')
+database_env = dotenv_values("database.env")
+#SQLALCHEMY_DATABASE_URL = f"postgresql://{database_env['POSTGRES_USER']}:{database_env['POSTGRES_PASSWORD']}@localhost:{database_env['POSTGRES_PORT']}/{database_env['POSTGRES_DB']}"
 
 SQLALCHEMY_DATABASE_URL=os.environ.get('DATABASE_URL')
 

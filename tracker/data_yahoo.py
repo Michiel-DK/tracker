@@ -507,8 +507,10 @@ class Yahoo:
         
         growth = growth.pct_change()
         
-        growth['year'] = fundamentals['year']
+        growth['ticker'] = fundamentals['ticker']
         growth['key'] = fundamentals['key']
+        growth['year'] = fundamentals['year']
+       
         
         return reduce_memory_usage(growth.iloc[1: , :])
 

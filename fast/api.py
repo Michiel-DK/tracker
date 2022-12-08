@@ -2,10 +2,10 @@ import uvicorn
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
-from jose import JWTError, jwt
+#from jose import JWTError, jwt
 from passlib.context import CryptContext
 from typing import List
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from . import crud, schemas, authentification
 from .database import SessionLocal
 import os
@@ -63,6 +63,8 @@ def get_db():
 #     return items
 
 
+'''USERS ENDPOINTS'''
+
 @app.get("/token/")
 #will look in request for authorization header and check if value=Bearer + token => returns token as 'str'
 def read_items(token: str = Depends(oauth2_scheme)):
@@ -86,6 +88,9 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
 @app.get("/users/me")
 def read_users_me(current_user: schemas.User = Depends(authentification.get_current_user)):
     return current_user
+    
+
+'''WEEKLY ENDPOINTS'''
 
 @app.get("/prices/{ticker}", response_model=List[schemas.Prices])
 def read_items(ticker: str, db: Session = Depends(get_db), current_user: schemas.User = Depends(authentification.get_current_user)):
@@ -100,6 +105,11 @@ def read_items(ticker: str, db: Session = Depends(get_db), current_user: schemas
 @app.get("/weekly_all/", response_model=List[schemas.Weekly])
 def read_items(db: Session = Depends(get_db), current_user: schemas.User = Depends(authentification.get_current_user)):
     items = crud.get_all_tickers(db)
+    return items
+
+@app.get("/get_random_weekly/", response_model=schemas.Tick)
+def get_oldest_weekly(db: Session = Depends(get_db)):
+    items = crud.get_random_weekly(db)
     return items
         
 '''QUARTERLY ENDPOINTS'''

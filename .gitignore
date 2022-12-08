@@ -10,3 +10,6 @@ database.ini
 *.ipynb
 *.txt
 __pycache__
+*.dump
+*ipynb
+notebooks/

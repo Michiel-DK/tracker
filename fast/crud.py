@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy.sql import func
 
 from . import models, schemas
 
@@ -9,14 +10,13 @@ def get_weekly(db: Session, ticker:str):
 def get_all_tickers(db: Session):
     return db.query(models.Weekly).all()
 
-'''OTHER CRUD'''
 def get_prices(db: Session, ticker:str):
     return db.query(models.Prices).filter(models.Prices.ticker == ticker).all()
 
-'''QUARTERLY CRUD'''
+def get_random_weekly(db: Session):
+    return db.query(models.Weekly).order_by(func.random()).first()
 
-# def get_weekly(db: Session, skip: int = 0, limit: int = 100):
-#     return db.query(models.Weekly).offset(skip).limit(limit).all()
+'''QUARTERLY CRUD'''
 
 def get_moatq(db: Session, ticker: str):
     return db.query(models.Moatq).filter(models.Moatq.ticker == ticker).all()
@@ -27,8 +27,17 @@ def get_healthq(db: Session, ticker: str):
 def get_financialsq(db: Session, ticker=str):
     return db.query(models.Financialsq).filter(models.Financialsq.ticker == ticker).all()
 
+def get_financialsq_target(db: Session, year=str):
+    return db.query(models.Financialsq).filter(models.Financialsq.year != year).all()
+
+def get_financialsq_current(db: Session, year=str):
+    return db.query(models.Financialsq).filter(models.Financialsq.year == year).all()
+
 def get_growthq(db: Session, ticker=str):
     return db.query(models.Growthq).filter(models.Growthq.ticker == ticker).all()
+
+def get_oldest_q(db: Session):
+    return db.query(models.Financialsq).order_by(models.Financialsq.date.asc()).first()
 
 '''YEARLY CRUD'''
 
