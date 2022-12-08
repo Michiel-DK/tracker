@@ -62,6 +62,7 @@ def get_db():
 #     items = crud.get_weekly(db, skip=skip, limit=limit)
 #     return items
 
+
 '''USERS ENDPOINTS'''
 
 @app.get("/token/")
@@ -87,14 +88,9 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
 @app.get("/users/me")
 def read_users_me(current_user: schemas.User = Depends(authentification.get_current_user)):
     return current_user
+    
 
 '''WEEKLY ENDPOINTS'''
-
-@app.get("/update_quarterly/{quarter1}/{quarter2}", response_model=List[schemas.Financialsq])
-def read_items(quarter1:str, quarter2:str, db: Session = Depends(get_db)):
-    items1 = crud.get_financialsq_target(db, year=quarter1)
-    items2 = crud.get_financialsq_current(db, year=quarter2)
-    return items1
 
 @app.get("/prices/{ticker}", response_model=List[schemas.Prices])
 def read_items(ticker: str, db: Session = Depends(get_db), current_user: schemas.User = Depends(authentification.get_current_user)):
