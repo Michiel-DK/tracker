@@ -1,4 +1,4 @@
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Dict
 import datetime
 from pydantic import BaseModel
 
@@ -30,13 +30,18 @@ class PricesBase(BaseModel):
 class PricesCreate(PricesBase):
     pass
 
+"""
 class Weekly_Id(BaseModel):
-    """Id subclass for weekly api call"""
+    '''Id subclass for weekly api call'''
     ticker: str
     key: str
     date: datetime.date
+
     
 class Weekly_General(BaseModel):
+    ticker: str
+    key: str
+    date: datetime.date
     '''General subclass for weekly api call'''
     bookvalue: Optional[float] = None
     country: Optional[str] = None
@@ -54,6 +59,7 @@ class Weekly_General(BaseModel):
     marketcap: Optional[int] = None
     beta : Optional[float] = None
     beta3year : Optional[str] = None
+
     
 class Weekly_Analysts(BaseModel):
     '''Analyst subclass for weekly api call'''
@@ -68,6 +74,7 @@ class Weekly_Analysts(BaseModel):
     targethighprice: Optional[float] = None
     targetmedianprice: Optional[float] = None
     targetmeanprice: Optional[float] = None
+
     
 class Weekly_Value(BaseModel):
     '''Value subclass for weekly api call'''
@@ -80,6 +87,7 @@ class Weekly_Value(BaseModel):
     pricetosalestrailing12months: Optional[float] = None
     pricetobook: Optional[float] = None
     quickratio: Optional[float] = None
+
     
 class Weekly_Dividend(BaseModel):
     '''Dividend subclass for weekly api call'''
@@ -88,6 +96,7 @@ class Weekly_Dividend(BaseModel):
     fiveyearavgdividendyield: Optional[float] = None
     exdividenddate: Optional[int] = None
     payoutratio: Optional[float] = None
+
     
 class Weekly_Growth(BaseModel):
     ''' Growth subclass for weekly api call'''
@@ -96,6 +105,7 @@ class Weekly_Growth(BaseModel):
     revenuegrowth: Optional[float] = None
     revenuequarterlygrowth: Optional[str] = None
     freecashflow: Optional[int] = None
+
     
 class Weekly_Profitability(BaseModel):
     ''' Profitability subclass for weekly api call'''
@@ -104,6 +114,7 @@ class Weekly_Profitability(BaseModel):
     returnonassets: Optional[float] = None
     returnonequity: Optional[float] = None
     profitmargins: Optional[float] = None
+
     
 class Weekly_Price(BaseModel):
     '''Price subclass for weekly api call'''
@@ -112,17 +123,19 @@ class Weekly_Price(BaseModel):
     fiftytwoweeklow: Optional[float] = None
     fiftytwoweekhigh: Optional[float] = None
     twohundreddayaverage: Optional[float] = None
+
     
 class Weekly_Momentum(BaseModel):
     '''Momentum subclass for weekly api call'''
     fiveyearaveragereturn: Optional[str] = None
     threeyearaveragereturn: Optional[str] = None
+
     
 class Weekly_Earnings(BaseModel):
     '''Earnings subclass for weekly api call'''
     forwardeps: Optional[float] = None
     trailingeps: Optional[float] = None
-    
+
 class Weekly_Ownership(BaseModel):
     '''Ownership subclass for weekly api call'''
     heldpercentinsiders: Optional[float] = None
@@ -140,6 +153,7 @@ class Weekly_Balance(BaseModel):
     totalrevenue: Optional[int] = None
     grossprofits: Optional[int] = None
     operatingcashflow: Optional[int] = None
+
     
     
 
@@ -148,26 +162,106 @@ class WeeklyBase(BaseModel):
     
     id: Weekly_Id | None = None
     
-    general: Union[Weekly_General, None] = None
+    general: Weekly_General | None = None
     
-    analysts: Union[Weekly_Analysts, None] = None
+    analysts: Weekly_Analysts | None = None
     
-    value: Union[Weekly_Value, None] = None
+    value: Weekly_Value | None = None
     
-    dividends: Union[Weekly_Dividend, None] = None
+    dividends: Weekly_Dividend | None = None
     
-    growth: Union[Weekly_Growth, None] = None
+    growth: Weekly_Growth | None = None
     
-    price: Union[Weekly_Price, None] = None
+    price: Weekly_Price | None = None
     
-    momentum: Union[Weekly_Momentum, None] = None
+    momentum: Weekly_Momentum | None = None
     
-    earnings: Union[Weekly_Earnings, None] = None
+    earnings: Weekly_Earnings | None = None
     
-    ownership : Union[Weekly_Ownership, None] = None
+    ownership : Weekly_Ownership | None = None
     
-    balance : Union[Weekly_Balance, None] = None  
+    balance : Weekly_Balance | None = None 
+    
+    class Config:
+        orm_mode=True
+"""
 
+class WeeklyBase(BaseModel):
+    ticker: str
+    key: str
+    date: datetime.date
+    bookvalue: Optional[float] = None
+    country: Optional[str] = None
+    currency: Optional[str] = None
+    currentprice: Optional[float] = None
+    enterprisevalue : Optional[int] = None
+    exchange : Optional[str] = None
+    fulltimeemployees : Optional[int] = None
+    sector: Optional[str] = None
+    industry: Optional[str] = None
+    isesgpopulated: Optional[bool] = None
+    longbusinesssumary: Optional[str] = None
+    longname: Optional[str] = None
+    market : Optional[str] = None
+    marketcap: Optional[int] = None
+    beta : Optional[float] = None
+    beta3year : Optional[str] = None
+    recommendationmean: Optional[float] = None
+    recommendationkey: Optional[str] = None
+    morningstaroverallrating: Optional[str] = None
+    morningstarriskrating: Optional[str] = None
+    numberofanalystopinions: Optional[int] = None
+    sharesshort: Optional[int] = None
+    shortratio: Optional[float] = None
+    targetlowprice: Optional[float] = None
+    targethighprice: Optional[float] = None
+    targetmedianprice: Optional[float] = None
+    targetmeanprice: Optional[float] = None
+    currentratio: Optional[float] = None
+    debttoequity: Optional[float] = None
+    enterprisetoebitda: Optional[float] = None
+    enterprisetorevenue: Optional[float] = None
+    forwardpe: Optional[float] = None
+    trailingpe: Optional[float] = None
+    pricetosalestrailing12months: Optional[float] = None
+    pricetobook: Optional[float] = None
+    quickratio: Optional[float] = None
+    dividendrate: Optional[float] = None
+    dividendyield: Optional[float] = None
+    fiveyearavgdividendyield: Optional[float] = None
+    exdividenddate: Optional[int] = None
+    payoutratio: Optional[float] = None
+    earningsgrowth: Optional[float] = None
+    earningsquarterlygrowth: Optional[float] = None
+    revenuegrowth: Optional[float] = None
+    revenuequarterlygrowth: Optional[str] = None
+    freecashflow: Optional[int] = None
+    ebitdamargins: Optional[float] = None
+    grossmargins: Optional[float] = None
+    returnonassets: Optional[float] = None
+    returnonequity: Optional[float] = None
+    profitmargins: Optional[float] = None
+    currentprice: Optional[float] = None
+    fiftydayaverage: Optional[float] = None
+    fiftytwoweeklow: Optional[float] = None
+    fiftytwoweekhigh: Optional[float] = None
+    twohundreddayaverage: Optional[float] = None
+    fiveyearaveragereturn: Optional[str] = None
+    threeyearaveragereturn: Optional[str] = None
+    forwardeps: Optional[float] = None
+    trailingeps: Optional[float] = None
+    heldpercentinsiders: Optional[float] = None
+    heldpercentinstitutions: Optional[float] = None
+    impliedsharesoutstanding: Optional[str] = None
+    floatshares: Optional[int] = None
+    sharesoutstanding: Optional[int] = None
+    totalassets: Optional[str] = None
+    totalcash: Optional[int] = None
+    totalcashpershare: Optional[float] = None
+    totaldebt: Optional[int] = None
+    totalrevenue: Optional[int] = None
+    grossprofits: Optional[int] = None
+    operatingcashflow: Optional[int] = None
     
 class WeeklyCreate(WeeklyBase):
     pass
@@ -323,9 +417,19 @@ class Weekly(WeeklyBase):
         #orm_mode will tell the Pydantic model to read the data even if it is not a dict, but an ORM model
         orm_mode = True
         
-class Tick(BaseModel):
+class RandomTick(BaseModel):
     # Schema to only get back ticker
     ticker: str
+    #owner_id: int
+    class Config:
+        #orm_mode will tell the Pydantic model to read the data even if it is not a dict, but an ORM model
+        orm_mode = True
+        
+class AllTick(BaseModel):
+    # Schema to get back all tickers
+    ticker: str
+    longname: Optional[str] = None
+    
     #owner_id: int
     class Config:
         #orm_mode will tell the Pydantic model to read the data even if it is not a dict, but an ORM model

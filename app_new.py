@@ -2,22 +2,31 @@ import streamlit as st
 import requests
 import pandas as pd
 
-ticker = st.text_input('ticker')
+all_ticks = requests.get(f"http://127.0.0.1:8000/get_all_tickers/").json()
 
-header = header = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqb2huZG9lIiwiZXhwIjoxNjcwNDg5MTc5fQ.8ooUGxJAfrio-qvhlKg4RH79gC6ISi1OPlPK8WaRoQw'}
 
-if ticker:
 
-    weekly = pd.DataFrame(requests.get(f"http://127.0.0.1:8000/weekly/{ticker}", headers=header).json())
+option = st.selectbox(
+        'Ticker or name?',
+        all_ticks)
+
+header = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqb2huZG9lIiwiZXhwIjoxNjcwNjg1Mjg1fQ.fo0E_MOQisHe3KWUz41O7vCpkDXbJys564q6hk8WFrk'}
+
+if option:
     
-    st.write(type(weekly))
-    
-    weekly.drop_duplicates(subset=weekly.columns.difference(['key', 'date']))
-    
-    prices = requests.get(f"http://127.0.0.1:8000/prices/{ticker}", headers=header).json()
-    
-    print(prices)
+    ticker = option['ticker']
 
-    st.dataframe(weekly)
+    weekly = pd.DataFrame.from_records(requests.get(f"http://127.0.0.1:8000/weekly/{ticker}", headers=header).json())
 
-    st.write(prices)
+    
+    #weekly_df = weekly.drop_duplicates(subset=weekly.columns.difference(['key', 'date', 'currentprice']))
+    
+    st.write(weekly)
+    
+    quarterly = pd.DataFrame(requests.get(f"http://127.0.0.1:8000/q_financials/{ticker}", headers=header).json())
+    
+    st.dataframe(quarterly)
+    
+    yearly = pd.DataFrame(requests.get(f"http://127.0.0.1:8000/y_financials/{ticker}", headers=header).json())
+    
+    st.dataframe(yearly)
