@@ -60,6 +60,42 @@ def update_quarter(ticker, engine):
                 copy_from_stringio(row, 'quarterly_growth', engine)
         
         print(f"q - {ticker} - {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))}")
+        
+def get_engine():
+        load_dotenv()
+
+        SQLALCHEMY_DATABASE_URL=os.environ.get('DATABASE_URL')
+
+        engine = create_engine(SQLALCHEMY_DATABASE_URL)
+
+        Session = sessionmaker(bind=engine)
+        
+        return engine
+                
+        
+def update_specific_ticker(ticker):
+        engine = get_engine()
+        
+        try:
+                update_quarter(ticker, engine)
+        except AttributeError as a:
+                print(f'Attribute error for q {ticker}')
+                print(a)
+                pass
+        except KeyError as k:
+                print(f'Key error for q {ticker}')
+                print(k)
+                pass
+        except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError, urllib3.exceptions.ProtocolError):
+                time.sleep(30)
+                print(f'Connection error for q {ticker}')
+                pass
+        except ValueError as v:
+                print(f'Value error for q {ticker} - probably delisted')
+                print(v)
+                pass
+        
+        
     
 if __name__ == '__main__':
         start = time.localtime(time.time())
@@ -70,6 +106,10 @@ if __name__ == '__main__':
         except AttributeError as a:
                 print(f'Attribute error for q {ticker}')
                 print(a)
+                import ipdb, traceback, sys
+                extype, value, tb = sys.exc_info()
+                traceback.print_exc()
+                ipdb.post_mortem(tb)
                 pass
         except KeyError as k:
                 print(f'Key error for q {ticker}')
