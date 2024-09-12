@@ -374,7 +374,7 @@ class Yahoo:
                     
             combo_merged = empty.merge(combo, how='right').set_index(empty.index)
             
-            combo_merged = combo_merged.fillna(0).astype('int')
+            combo_merged = combo_merged.fillna(0).astype('int')[columns]
             
             return reduce_memory_usage(combo_merged)
     
