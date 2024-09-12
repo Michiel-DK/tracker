@@ -107,9 +107,14 @@ def read_items(db: Session = Depends(get_db), current_user: schemas.User = Depen
     items = crud.get_all_tickers(db)
     return items
 
-@app.get("/get_random_weekly/", response_model=schemas.Tick)
+@app.get("/get_random_weekly/", response_model=schemas.RandomTick)
 def get_oldest_weekly(db: Session = Depends(get_db)):
     items = crud.get_random_weekly(db)
+    return items
+
+@app.get("/get_all_tickers/", response_model=List[schemas.AllTick])
+def get_all_tickers(db: Session = Depends(get_db)):
+    items = crud.get_all_tickers(db)
     return items
         
 '''QUARTERLY ENDPOINTS'''

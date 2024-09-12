@@ -69,5 +69,5 @@ class Iex:
         moat['operating_margin'] = financials['operating_margin'].apply(lambda x: 1 if x >= 0.15 else 0)
         
 if __name__ == '__main__':
-    adbe = Iex('MSFT', 'quarter', '12').add_fundamentals()
+    adbe = Iex('LRLCF', 'quarter', '12').add_fundamentals()
     print(adbe)

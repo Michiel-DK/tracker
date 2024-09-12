@@ -8,7 +8,7 @@ def get_weekly(db: Session, ticker:str):
     return db.query(models.Weekly).filter(models.Weekly.ticker == ticker).all()
 
 def get_all_tickers(db: Session):
-    return db.query(models.Weekly).all()
+    return db.query(models.Weekly).distinct()
 
 def get_prices(db: Session, ticker:str):
     return db.query(models.Prices).filter(models.Prices.ticker == ticker).all()
